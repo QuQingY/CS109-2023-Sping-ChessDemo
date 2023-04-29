@@ -35,3 +35,7 @@ public class ChessPiece {
         return rank;
     }
 }
+//This is my update.
+// Can I use Github Desktop?
+//Can I use GitHub successfully?
+//well i can use idea to do this

@@ -5,7 +5,7 @@ import model.PlayerColor;
 import javax.swing.*;
 import java.awt.*;
 
-public class MouseChessComponent extends JComponent{
+public class MouseChessComponent extends ChessComponent{
 
         private PlayerColor owner;
 

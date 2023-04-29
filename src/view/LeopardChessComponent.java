@@ -5,7 +5,7 @@ import model.PlayerColor;
 import javax.swing.*;
 import java.awt.*;
 
-public class LeopardChessComponent extends JComponent {
+public class LeopardChessComponent extends ChessComponent {
     private PlayerColor owner;
 
     private boolean selected;

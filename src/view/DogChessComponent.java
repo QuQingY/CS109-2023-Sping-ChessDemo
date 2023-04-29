@@ -5,7 +5,7 @@ import model.PlayerColor;
 import javax.swing.*;
 import java.awt.*;
 
-public class DogChessComponent extends JComponent {
+public class DogChessComponent extends ChessComponent {
     private PlayerColor owner;
 
     private boolean selected;

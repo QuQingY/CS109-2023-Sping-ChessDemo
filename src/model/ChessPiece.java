@@ -5,7 +5,7 @@ public class ChessPiece {
     // the owner of the chess
     private PlayerColor owner;
 
-    // Elephant? Cat? Dog? ... balabala
+    // Elephant? Cat? Dog? ...
     private String name;
     private int rank;
 
@@ -17,6 +17,9 @@ public class ChessPiece {
 
     public boolean canCapture(ChessPiece target) {
         // TODO: Finish this method!
+        if (this.getRank() > target.getRank()){
+            return true;
+        }
         return false;
     }
 

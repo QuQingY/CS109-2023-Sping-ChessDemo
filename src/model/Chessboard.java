@@ -19,8 +19,36 @@ public class Chessboard {
         for (int i = 0; i < Constant.CHESSBOARD_ROW_SIZE.getNum(); i++) {
             for (int j = 0; j < Constant.CHESSBOARD_COL_SIZE.getNum(); j++) {
                 grid[i][j] = new Cell();
+                grid[i][j].setType(Cell.Type.Land);
             }
         }
+        grid[0][2].setType(Cell.Type.blueTrap);
+        grid[0][4].setType(Cell.Type.blueTrap);
+        grid[1][3].setType(Cell.Type.blueTrap);
+
+        grid[8][2].setType(Cell.Type.redTrap);
+        grid[8][4].setType(Cell.Type.redTrap);
+        grid[7][3].setType(Cell.Type.redTrap);
+
+        grid[0][3].setType(Cell.Type.blueDen);
+
+        grid[8][3].setType(Cell.Type.redDen);
+
+        grid[3][1].setType(Cell.Type.River);
+        grid[3][2].setType(Cell.Type.River);
+        grid[3][4].setType(Cell.Type.River);
+        grid[3][5].setType(Cell.Type.River);
+
+        grid[4][1].setType(Cell.Type.River);
+        grid[4][2].setType(Cell.Type.River);
+        grid[4][4].setType(Cell.Type.River);
+        grid[4][5].setType(Cell.Type.River);
+
+        grid[5][1].setType(Cell.Type.River);
+        grid[5][2].setType(Cell.Type.River);
+        grid[5][4].setType(Cell.Type.River);
+        grid[5][5].setType(Cell.Type.River);
+
     }
 
     private void initPieces() {
@@ -90,12 +118,15 @@ public class Chessboard {
         if (getChessPieceAt(src) == null || getChessPieceAt(dest) != null) {
             return false;
         }
+        if (getChessPieceAt(src).getRank() != 1 && getGridAt(dest).getType() == Cell.Type.River  ){
+            return false;
+        }
         return calculateDistance(src, dest) == 1;
     }
 
 
     public boolean isValidCapture(ChessboardPoint src, ChessboardPoint dest) {
         // TODO:Fix this method
-        return false;
+        return getChessPieceAt(src).canCapture(getChessPieceAt(dest));
     }
 }

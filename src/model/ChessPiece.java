@@ -5,7 +5,7 @@ public class ChessPiece {
     // the owner of the chess
     private PlayerColor owner;
 
-    // Elephant? Cat? Dog? ...
+    // Elephant? Cat? Dog? ... balabala
     private String name;
     private int rank;
 

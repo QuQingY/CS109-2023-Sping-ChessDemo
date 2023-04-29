@@ -7,6 +7,20 @@ import java.io.Serializable;
 public class Cell implements Serializable {
     // the position for chess
     private ChessPiece piece;
+    private Type type;
+
+    public enum Type{
+
+        River, Land, redTrap,redDen, blueTrap, blueDen;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
+
+    public Type getType() {
+        return type;
+    }
 
 
     public ChessPiece getPiece() {

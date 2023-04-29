@@ -32,3 +32,4 @@ public class ChessPiece {
         return rank;
     }
 }
+//This is my update.

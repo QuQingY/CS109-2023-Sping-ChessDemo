@@ -121,6 +121,55 @@ public class Chessboard {
         if (getChessPieceAt(src).getRank() != 1 && getGridAt(dest).getType() == Cell.Type.River  ){
             return false;
         }
+        if (calculateDistance(src,dest) > 1 &&
+                getChessPieceAt(src).getRank() == 7 || getChessPieceAt(src).getRank() == 6){
+
+            boolean isRiver =true;
+            boolean noMouse = true;
+
+            if (src.getRow() == dest.getRow()){
+                int i = src.getCol() +1;
+
+                for (int j = i; j < dest.getCol(); j++){
+                    if (grid[src.getRow()][j].getType() != Cell.Type.River){
+                        isRiver = false;
+                        break;
+                    }
+                }//判断是否为河流
+                if (isRiver){
+                    for (int j = i; j < dest.getCol(); j++){
+                        if (grid[src.getRow()][j].getPiece() != null){
+                        noMouse = false;
+                        break;
+                        }
+                    }
+                }// 判断河里是否有老鼠
+            }
+
+            else if (src.getCol() == dest.getCol()){
+                int i = src.getRow() +1;
+
+                for (int j = i; j < dest.getRow(); j++){
+                    if (grid[j][src.getCol()].getType() != Cell.Type.River){
+                        isRiver = false;
+                        break;
+                    }
+                }//判断是否为河流
+                if (isRiver){
+                    for (int j = i; j < dest.getRow(); j++){
+                        if (grid[j][src.getCol()].getPiece() != null){
+                            noMouse = false;
+                            break;
+                        }
+                    }
+                }// 判断河里是否有老鼠
+            }
+
+            if (isRiver && noMouse){
+                return true;
+            }
+        }
+
         return calculateDistance(src, dest) == 1;
     }
 

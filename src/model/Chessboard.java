@@ -101,9 +101,10 @@ public class Chessboard {
     }
 
     public void captureChessPiece(ChessboardPoint src, ChessboardPoint dest) {
-        if (isValidCapture(src, dest)) {
+        if (!isValidCapture(src, dest)) {
             throw new IllegalArgumentException("Illegal chess capture!");
         }
+        setChessPiece(dest, removeChessPiece(src));
         // TODO: Finish the method.
     }
 
@@ -121,61 +122,105 @@ public class Chessboard {
         if (getChessPieceAt(src).getRank() != 1 && getGridAt(dest).getType() == Cell.Type.River  ){
             return false;
         }
-        if (calculateDistance(src,dest) > 1 &&
-                getChessPieceAt(src).getRank() == 7 || getChessPieceAt(src).getRank() == 6){
-
-            boolean isRiver =true;
-            boolean noMouse = true;
-
-            if (src.getRow() == dest.getRow()){
-                int i = src.getCol() +1;
-
-                for (int j = i; j < dest.getCol(); j++){
-                    if (grid[src.getRow()][j].getType() != Cell.Type.River){
-                        isRiver = false;
-                        break;
-                    }
-                }//判断是否为河流
-                if (isRiver){
-                    for (int j = i; j < dest.getCol(); j++){
-                        if (grid[src.getRow()][j].getPiece() != null){
-                        noMouse = false;
-                        break;
-                        }
-                    }
-                }// 判断河里是否有老鼠
-            }
-
-            else if (src.getCol() == dest.getCol()){
-                int i = src.getRow() +1;
-
-                for (int j = i; j < dest.getRow(); j++){
-                    if (grid[j][src.getCol()].getType() != Cell.Type.River){
-                        isRiver = false;
-                        break;
-                    }
-                }//判断是否为河流
-                if (isRiver){
-                    for (int j = i; j < dest.getRow(); j++){
-                        if (grid[j][src.getCol()].getPiece() != null){
-                            noMouse = false;
-                            break;
-                        }
-                    }
-                }// 判断河里是否有老鼠
-            }
-
-            if (isRiver && noMouse){
-                return true;
-            }
+        if(getGridAt(dest).getType() == Cell.Type.blueDen && getChessPieceOwner(src) == PlayerColor.BLUE){
+            return  false;
         }
+        if (getGridAt(dest).getType() == Cell.Type.redDen && getChessPieceOwner(src) == PlayerColor.RED){
+            return false;
+        }
+        if (calculateDistance(src,dest) > 1 &&
+                getChessPieceAt(src).getRank() == 7 || getChessPieceAt(src).getRank() == 6) {
+            if (src.getRow() != dest.getRow() && src.getCol() != dest.getCol()) {
+                return false;
+            }//判断是否在同一行/列
 
+            if (src.getRow() == dest .getRow()){
+                int row = src .getRow();
+                int direction = src.getCol() < dest.getCol() ? 1 : -1;
+                int col = src.getCol() + direction;
+
+                while ( col != dest.getCol() ){
+                    if (grid[row][col].getType() != Cell.Type.River
+                            | grid[row][col].getPiece() != null){
+                        return false;
+                    }
+                    col += direction;
+                }
+            }
+
+            if (src.getCol() == dest .getCol()){
+                int col = src.getCol();
+                int direction = src.getRow() < dest.getRow()? 1 : -1;
+                int row = src .getRow() + direction;
+
+                while ( row != dest.getRow() ){
+                    if (grid[row][col].getType() != Cell.Type.River
+                            | grid[row][col].getPiece() != null){
+                        return false;
+                    }
+                    row += direction;
+                }
+            }
+
+            return true;
+        }
         return calculateDistance(src, dest) == 1;
     }
 
 
     public boolean isValidCapture(ChessboardPoint src, ChessboardPoint dest) {
         // TODO:Fix this method
-        return getChessPieceAt(src).canCapture(getChessPieceAt(dest));
+        if (getChessPieceAt(src) == null || getChessPieceAt(dest) == null){
+            return  false;
+        }
+        if (getChessPieceOwner(src) == getChessPieceOwner(dest)){
+            return false;
+        }
+        if (grid[dest.getRow()][dest.getCol()].getType() == Cell.Type.River){
+            return false;
+        }
+        if (grid[src.getRow()][src.getCol()].getType() == Cell.Type.River){
+            return false;
+        }
+
+        if (calculateDistance(src,dest) > 1 &&
+                getChessPieceAt(src).getRank() == 7 || getChessPieceAt(src).getRank() == 6){
+
+            if (src.getRow() != dest.getRow() && src.getCol() != dest.getCol()) {
+                return false;
+            }//判断是否在同一行/列
+
+            if (src.getRow() == dest .getRow()){
+                int row = src .getRow();
+                int direction = src.getCol() < dest.getCol() ? 1 : -1;
+                int col = src.getCol() + direction;
+
+                while ( col != dest.getCol() ){
+                    if (grid[row][col].getType() != Cell.Type.River
+                            | grid[row][col].getPiece() != null){
+                        return false;
+                    }
+                    col += direction;
+                }
+            }
+
+            if (src.getCol() == dest .getCol()){
+                int col = src.getCol();
+                int direction = src.getRow() < dest.getRow()? 1 : -1;
+                int row = src .getRow() + direction;
+
+                while ( row != dest.getRow() ){
+                    if (grid[row][col].getType() != Cell.Type.River
+                            | grid[row][col].getPiece() != null){
+                        return false;
+                    }
+                    row += direction;
+                }
+            }
+
+            return getChessPieceAt(src).canCapture(getChessPieceAt(dest));
+        }
+
+        return calculateDistance(src,dest)==1 && getChessPieceAt(src).canCapture(getChessPieceAt(dest));
     }
 }

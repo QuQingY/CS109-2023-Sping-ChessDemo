@@ -22,17 +22,17 @@ public class Chessboard {
                 grid[i][j].setType(Cell.Type.Land);
             }
         }
-        grid[0][2].setType(Cell.Type.blueTrap);
-        grid[0][4].setType(Cell.Type.blueTrap);
-        grid[1][3].setType(Cell.Type.blueTrap);
+        grid[0][2].setType(Cell.Type.redTrap);
+        grid[0][4].setType(Cell.Type.redTrap);
+        grid[1][3].setType(Cell.Type.redTrap);
 
-        grid[8][2].setType(Cell.Type.redTrap);
-        grid[8][4].setType(Cell.Type.redTrap);
-        grid[7][3].setType(Cell.Type.redTrap);
+        grid[8][2].setType(Cell.Type.blueTrap);
+        grid[8][4].setType(Cell.Type.blueTrap);
+        grid[7][3].setType(Cell.Type.blueTrap);
 
-        grid[0][3].setType(Cell.Type.blueDen);
+        grid[0][3].setType(Cell.Type.redDen);
 
-        grid[8][3].setType(Cell.Type.redDen);
+        grid[8][3].setType(Cell.Type.blueDen);
 
         grid[3][1].setType(Cell.Type.River);
         grid[3][2].setType(Cell.Type.River);
@@ -223,4 +223,39 @@ public class Chessboard {
 
         return calculateDistance(src,dest)==1 && getChessPieceAt(src).canCapture(getChessPieceAt(dest));
     }
+
+    public void enterTrap(ChessboardPoint selectedPoint, ChessboardPoint dest){
+        if (getGridAt(dest).getType() == Cell.Type.blueTrap
+                && getChessPieceOwner(selectedPoint) == PlayerColor.RED){
+            getChessPieceAt(selectedPoint).setRank(0);
+        } else if (getGridAt(dest).getType() == Cell.Type.redTrap
+                && getChessPieceOwner(selectedPoint) == PlayerColor.BLUE){
+            getChessPieceAt(selectedPoint).setRank(0);
+        }
+    }
+
+    public void escapeTrap(ChessboardPoint selectedPoint, ChessboardPoint dest){
+        if (getGridAt(selectedPoint).getType() == Cell.Type.blueTrap
+        | getGridAt(selectedPoint).getType() == Cell.Type.redTrap){
+            switch (getChessPieceAt(selectedPoint).getName()){
+                case "Mouse":
+                    getChessPieceAt(selectedPoint).setRank(1);
+                case "Cat":
+                    getChessPieceAt(selectedPoint).setRank(2);
+                case "Dog":
+                    getChessPieceAt(selectedPoint).setRank(3);
+                case "Leopard":
+                    getChessPieceAt(selectedPoint).setRank(4);
+                case "Wolf":
+                    getChessPieceAt(selectedPoint).setRank(5);
+                case "Tiger":
+                    getChessPieceAt(selectedPoint).setRank(6);
+                case "Lion":
+                    getChessPieceAt(selectedPoint).setRank(7);
+                case "Elephant":
+                    getChessPieceAt(selectedPoint).setRank(8);
+            }
+        }
+    }
+
 }

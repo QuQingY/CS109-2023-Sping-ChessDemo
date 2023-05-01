@@ -62,12 +62,15 @@ public class GameController implements GameListener {
     @Override
     public void onPlayerClickCell(ChessboardPoint point, CellComponent component) {
         if (selectedPoint != null && model.isValidMove(selectedPoint, point)) {
+            model.enterTrap(selectedPoint,point);
+            model.escapeTrap(selectedPoint, point);
             model.moveChessPiece(selectedPoint, point);
             view.setChessComponentAtGrid(point, view.removeChessComponentAtGrid(selectedPoint));
             selectedPoint = null;
             swapColor();
             view.repaint();
             // TODO: if the chess enter Dens or Traps and so on
+
         }
     }
 

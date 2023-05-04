@@ -24,6 +24,7 @@ public class GameController implements GameListener {
     private Chessboard model;
     private ChessboardComponent view;
     private PlayerColor currentPlayer;
+    private PlayerColor winner;
 
     // Record whether there is a selected piece before
     private ChessboardPoint selectedPoint;
@@ -54,7 +55,14 @@ public class GameController implements GameListener {
 
     private boolean win() {
         // TODO: Check the board if there is a winner
+
         return false;
+    }
+
+    private void denWin(){
+        winner = currentPlayer;
+        System.out.println("Winner is " + winner);
+        System.exit(0);
     }
 
 
@@ -62,14 +70,20 @@ public class GameController implements GameListener {
     @Override
     public void onPlayerClickCell(ChessboardPoint point, CellComponent component) {
         if (selectedPoint != null && model.isValidMove(selectedPoint, point)) {
+            //进入陷阱
             model.enterTrap(selectedPoint,point);
+            //离开陷阱
             model.escapeTrap(selectedPoint, point);
+            //移动
             model.moveChessPiece(selectedPoint, point);
             view.setChessComponentAtGrid(point, view.removeChessComponentAtGrid(selectedPoint));
             selectedPoint = null;
             swapColor();
             view.repaint();
             // TODO: if the chess enter Dens or Traps and so on
+            if (model.enterDen(point)){
+                denWin();
+            }
 
         }
     }

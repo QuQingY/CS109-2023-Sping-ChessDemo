@@ -258,4 +258,16 @@ public class Chessboard {
         }
     }
 
+    public boolean enterDen(ChessboardPoint point){
+        if (getGridAt(point).getType() == Cell.Type.blueDen && getChessPieceOwner(point) == PlayerColor.RED){
+            return true;
+        }
+
+        if (getGridAt(point).getType() == Cell.Type.redDen && getChessPieceOwner(point) == PlayerColor.BLUE){
+            return true;
+        }
+
+        return false;
+    }
+
 }

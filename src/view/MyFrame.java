@@ -132,7 +132,6 @@ public class MyFrame extends JFrame {
         });
 
 
-
         userPanel.add(username);
         userPanel.add(textField);
         passPanel.add(password);

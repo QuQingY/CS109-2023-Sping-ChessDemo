@@ -1,6 +1,7 @@
-package view;
+package view.Animal;
 
 import model.PlayerColor;
+import view.ChessComponent;
 
 import javax.swing.*;
 import java.awt.*;

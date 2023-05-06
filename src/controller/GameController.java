@@ -8,7 +8,6 @@ import model.Chessboard;
 import model.ChessboardPoint;
 import view.CellComponent;
 import view.ChessComponent;
-import view.ElephantChessComponent;
 import view.ChessboardComponent;
 
 /**

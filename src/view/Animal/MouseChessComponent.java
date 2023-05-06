@@ -1,11 +1,12 @@
-package view;
+package view.Animal;
 
 import model.PlayerColor;
+import view.ChessComponent;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class MouseChessComponent extends ChessComponent{
+public class MouseChessComponent extends ChessComponent {
 
         private PlayerColor owner;
 

@@ -1,16 +1,16 @@
-package view;
-
+package view.Animal;
 import model.PlayerColor;
+import view.ChessComponent;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class WolfChessComponent extends ChessComponent {
+public class TigerChessComponent extends ChessComponent {
     private PlayerColor owner;
 
     private boolean selected;
 
-    public WolfChessComponent(PlayerColor owner, int size) {
+    public TigerChessComponent(PlayerColor owner, int size) {
         this.owner = owner;
         this.selected = false;
         setSize(size/2, size/2);
@@ -35,7 +35,7 @@ public class WolfChessComponent extends ChessComponent {
         Font font = new Font("楷体", Font.PLAIN, getWidth() / 2);
         g2.setFont(font);
         g2.setColor(owner.getColor());
-        g2.drawString("狼", getWidth() / 4, getHeight() * 5 / 8); // FIXME: Use library to find the correct offset.
+        g2.drawString("虎", getWidth() / 4, getHeight() * 5 / 8); // FIXME: Use library to find the correct offset.
         if (isSelected()) { // Highlights the model if selected.
             g.setColor(Color.RED);
             g.drawOval(0, 0, getWidth() , getHeight());

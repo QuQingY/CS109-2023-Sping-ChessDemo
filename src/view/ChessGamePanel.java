@@ -6,16 +6,18 @@ import java.awt.*;
 /**
  * 这个类表示游戏过程中的整个游戏界面，是一切的载体
  */
-public class ChessGamePanel extends JPanel {
+public class ChessGamePanel extends ImagePanel {
     //    public final Dimension FRAME_SIZE ;
     private final int WIDTH;
     private final int HEIGTH;
 
     private final int ONE_CHESS_SIZE;
 
+
     private ChessboardComponent chessboardComponent;
     public ChessGamePanel(int width, int height) {
 //        setTitle("2023 CS109 Project Demo"); //设置标题
+        super("D:\\JavaProject\\浅色1.jpg");
         this.WIDTH = width;
         this.HEIGTH = height;
         this.ONE_CHESS_SIZE = (HEIGTH * 4 / 5) / 9;
@@ -64,11 +66,24 @@ public class ChessGamePanel extends JPanel {
      */
 
     private void addHelloButton() {
-        JButton button = new JButton("Show Hello Here");
-        button.addActionListener((e) -> JOptionPane.showMessageDialog(this, "Hello, world!"));
+        JButton button = new JButton("更换背景");
+//        button.addActionListener((e) -> JOptionPane.showMessageDialog(this, "Hello, world!"));
+        button.addActionListener(e -> {
+            ImageIcon imageIcon1 = new ImageIcon("D:\\JavaProject\\浅色1.jpg");
+            ImageIcon imageIcon2 = new ImageIcon("D:\\JavaProject\\粉.jpg");
+            ImageIcon imageIcon3 = new ImageIcon("D:\\JavaProject\\花.jpg");
+            if(getImageIcon().getImage().equals(imageIcon1.getImage())){
+                setImage("D:\\JavaProject\\粉.jpg");
+            } else if (getImageIcon().getImage().equals(imageIcon2.getImage())) {
+                setImage("D:\\JavaProject\\花.jpg");
+            } else if (getImageIcon().getImage().equals(imageIcon3.getImage())) {
+                setImage("D:\\JavaProject\\浅色1.jpg");
+            }
+            this.repaint();
+        });
         button.setLocation(HEIGTH, HEIGTH / 10 + 120);
         button.setSize(200, 60);
-        button.setFont(new Font("Rockwell", Font.BOLD, 20));
+        button.setFont(new Font("楷体", Font.BOLD, 20));
         add(button);
     }
 

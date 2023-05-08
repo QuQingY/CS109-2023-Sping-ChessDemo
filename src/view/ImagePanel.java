@@ -18,4 +18,13 @@ public class ImagePanel extends JPanel {
         super.paintComponent(graphics);
         graphics.drawImage(image,0,0,this.getWidth(),this.getHeight(),this);
     }
+
+    public void setImage(String path) {
+        imageIcon = new ImageIcon(path);
+        this.image = imageIcon.getImage();
+    }
+
+    public ImageIcon getImageIcon() {
+        return imageIcon;
+    }
 }

@@ -30,7 +30,7 @@ public class ChessGamePanel extends ImagePanel {
 
         addChessboard();
         addLabel();
-        addHelloButton();
+        addChangeBackgroundButton();
     }
 
     public ChessboardComponent getChessboardComponent() {
@@ -65,7 +65,7 @@ public class ChessGamePanel extends ImagePanel {
      * 在游戏面板中增加一个按钮，如果按下的话就会显示Hello, world!
      */
 
-    private void addHelloButton() {
+    private void addChangeBackgroundButton() {
         JButton button = new JButton("更换背景");
 //        button.addActionListener((e) -> JOptionPane.showMessageDialog(this, "Hello, world!"));
         button.addActionListener(e -> {

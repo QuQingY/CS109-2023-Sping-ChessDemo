@@ -51,7 +51,15 @@ public class Chessboard {
 
     }
 
-    private void initPieces() {
+    public void initPieces() {
+        for (int i = 0; i < Constant.CHESSBOARD_ROW_SIZE.getNum(); i++){
+            for (int j = 0; j < Constant.CHESSBOARD_COL_SIZE.getNum(); j++){
+                ChessboardPoint  point = new ChessboardPoint(i,j);
+                if (getChessPieceAt(point) != null){
+                    removeChessPiece(point);
+                }
+            }
+        }
         grid[6][0].setPiece(new ChessPiece(PlayerColor.BLUE, "Elephant",8));
         grid[2][6].setPiece(new ChessPiece(PlayerColor.RED, "Elephant",8));
         grid[2][0].setPiece(new ChessPiece(PlayerColor.RED, "Mouse",1));
@@ -224,40 +232,55 @@ public class Chessboard {
         return calculateDistance(src,dest)==1 && getChessPieceAt(src).canCapture(getChessPieceAt(dest));
     }
 
-    public void enterTrap(ChessboardPoint selectedPoint, ChessboardPoint dest){
-        if (getGridAt(dest).getType() == Cell.Type.blueTrap
-                && getChessPieceOwner(selectedPoint) == PlayerColor.RED){
+
+    public void enterTrap(ChessboardPoint selectedPoint){
             getChessPieceAt(selectedPoint).setRank(0);
-        } else if (getGridAt(dest).getType() == Cell.Type.redTrap
-                && getChessPieceOwner(selectedPoint) == PlayerColor.BLUE){
-            getChessPieceAt(selectedPoint).setRank(0);
-        }
     }
 
-    public void escapeTrap(ChessboardPoint selectedPoint, ChessboardPoint dest){
-        if (getGridAt(selectedPoint).getType() == Cell.Type.blueTrap
-        | getGridAt(selectedPoint).getType() == Cell.Type.redTrap){
-            switch (getChessPieceAt(selectedPoint).getName()){
+    public void escapeTrap(ChessboardPoint selectedPoint){
+        switch (getChessPieceAt(selectedPoint).getName()){
                 case "Mouse":
                     getChessPieceAt(selectedPoint).setRank(1);
+                    break;
                 case "Cat":
                     getChessPieceAt(selectedPoint).setRank(2);
+                    break;
                 case "Dog":
                     getChessPieceAt(selectedPoint).setRank(3);
+                    break;
                 case "Leopard":
                     getChessPieceAt(selectedPoint).setRank(4);
+                    break;
                 case "Wolf":
                     getChessPieceAt(selectedPoint).setRank(5);
+                    break;
                 case "Tiger":
                     getChessPieceAt(selectedPoint).setRank(6);
+                    break;
                 case "Lion":
                     getChessPieceAt(selectedPoint).setRank(7);
+                    break;
                 case "Elephant":
                     getChessPieceAt(selectedPoint).setRank(8);
-            }
+                    break;
+
         }
     }
 
+    public void Trap(ChessboardPoint selectedPoint, ChessboardPoint dest){
+        if (getGridAt(dest).getType() == Cell.Type.redTrap
+                && getChessPieceOwner(selectedPoint) == PlayerColor.BLUE) {
+            enterTrap(selectedPoint);
+        }
+        if (getGridAt(dest).getType() == Cell.Type.blueTrap
+                && getChessPieceOwner(selectedPoint) == PlayerColor.RED){
+            enterTrap(selectedPoint);
+        }
+        if (getGridAt(selectedPoint).getType() == Cell.Type.redTrap
+                | getGridAt(selectedPoint).getType() == Cell.Type.blueTrap){
+            escapeTrap(selectedPoint);
+        }
+    }
     public boolean enterDen(ChessboardPoint point){
         if (getGridAt(point).getType() == Cell.Type.blueDen && getChessPieceOwner(point) == PlayerColor.RED){
             return true;

@@ -52,10 +52,14 @@ public class GameController implements GameListener {
         currentPlayer = currentPlayer == PlayerColor.BLUE ? PlayerColor.RED : PlayerColor.BLUE;
     }
 
-    private boolean win() {
-        // TODO: Check the board if there is a winner
 
-        return false;
+
+    private void solveWin(){
+        if (model.win(currentPlayer)){
+            winner = currentPlayer;
+            System.out.println("Winner is " + winner);
+            System.exit(0);
+        }
     }
 
     private void denWin(){
@@ -77,13 +81,13 @@ public class GameController implements GameListener {
             model.moveChessPiece(selectedPoint, point);
             view.setChessComponentAtGrid(point, view.removeChessComponentAtGrid(selectedPoint));
             selectedPoint = null;
-            swapColor();
+
             view.repaint();
             // TODO: if the chess enter Dens or Traps and so on
             if (model.enterDen(point)){
                 denWin();
             }
-
+            swapColor();
         }
     }
 
@@ -110,5 +114,7 @@ public class GameController implements GameListener {
             swapColor();
             view.repaint();
         }
+        solveWin();
+
     }
 }

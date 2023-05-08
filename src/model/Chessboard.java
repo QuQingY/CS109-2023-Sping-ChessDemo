@@ -270,4 +270,16 @@ public class Chessboard {
         return false;
     }
 
+    public boolean win(PlayerColor currentPlayer) {
+        // TODO: Check the board if there is a winner
+        for (int i = 0; i < 9; i ++ ){
+            for (int j = 0; j < 7; j++){
+                ChessboardPoint checkPoint  = new ChessboardPoint(i,j);
+                if (getChessPieceAt(checkPoint) != null && getChessPieceOwner(checkPoint) != currentPlayer ){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 }

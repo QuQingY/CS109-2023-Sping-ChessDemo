@@ -37,6 +37,7 @@ public class ChessboardComponent extends JComponent {
         setSize(width, height);
         System.out.printf("chessboard width, height = [%d : %d], chess size = %d\n", width, height, CHESS_SIZE);
 
+        setTerrain();
         initiateGridComponents();
     }
 
@@ -47,6 +48,11 @@ public class ChessboardComponent extends JComponent {
      */
     public void initiateChessComponent(Chessboard chessboard) {
         Cell[][] grid = chessboard.getGrid();
+        for (int i = 0; i < CHESSBOARD_ROW_SIZE.getNum(); i++) {
+            for (int j = 0; j < CHESSBOARD_COL_SIZE.getNum(); j++) {
+                gridComponents[i][j].removeAll();
+            }
+        }
         for (int i = 0; i < CHESSBOARD_ROW_SIZE.getNum(); i++) {
             for (int j = 0; j < CHESSBOARD_COL_SIZE.getNum(); j++) {
                 // TODO: Implement the initialization checkerboard
@@ -106,8 +112,7 @@ public class ChessboardComponent extends JComponent {
         }
     }
 
-    public void initiateGridComponents() {
-
+    public void setTerrain(){
         riverCell.add(new ChessboardPoint(3,1));
         riverCell.add(new ChessboardPoint(3,2));
         riverCell.add(new ChessboardPoint(4,1));
@@ -133,7 +138,9 @@ public class ChessboardComponent extends JComponent {
         denCell.add(new ChessboardPoint(0,3));
 
         denCell.add(new ChessboardPoint(8,3));
+    }
 
+    public void initiateGridComponents() {
         for (int i = 0; i < CHESSBOARD_ROW_SIZE.getNum(); i++) {
             for (int j = 0; j < CHESSBOARD_COL_SIZE.getNum(); j++) {
                 ChessboardPoint temp = new ChessboardPoint(i, j);
@@ -203,6 +210,16 @@ public class ChessboardComponent extends JComponent {
                 System.out.print("One chess here and ");
                 gameController.onPlayerClickChessPiece(getChessboardPoint(e.getPoint()), (ChessComponent) clickedComponent.getComponents()[0]);
             }
+        }
+    }
+
+    public void showWinningInterface(String winner){
+        int result = JOptionPane.showConfirmDialog(this,"Do you want to restart the game?" ,winner + " win! Game Over",JOptionPane.YES_NO_OPTION );
+        if (result == JOptionPane.YES_OPTION){
+            gameController.restart();
+        }
+        if (result == JOptionPane.NO_OPTION){
+            System.exit(0);
         }
     }
 }

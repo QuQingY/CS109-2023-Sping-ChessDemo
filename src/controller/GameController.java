@@ -25,8 +25,18 @@ public class GameController implements GameListener {
     private PlayerColor currentPlayer;
     private PlayerColor winner;
 
+    private int roundCounter = 1;
+
     // Record whether there is a selected piece before
     private ChessboardPoint selectedPoint;
+
+    public int getRoundCounter(){
+        return this.roundCounter;
+    }
+
+    public PlayerColor getCurrentPlayer() {
+        return currentPlayer;
+    }
 
     public GameController(ChessboardComponent view, Chessboard model) {
         this.view = view;
@@ -58,14 +68,14 @@ public class GameController implements GameListener {
         if (model.win(currentPlayer)){
             winner = currentPlayer;
             System.out.println("Winner is " + winner);
-
+            view.showWinningInterface(winner.toString());
         }
     }
 
     private void denWin(){
         winner = currentPlayer;
         System.out.println("Winner is " + winner);
-        System.exit(0);
+        view.showWinningInterface(winner.toString());
     }
 
 
@@ -73,19 +83,20 @@ public class GameController implements GameListener {
     @Override
     public void onPlayerClickCell(ChessboardPoint point, CellComponent component) {
         if (selectedPoint != null && model.isValidMove(selectedPoint, point)) {
-            //进入陷阱
-            model.enterTrap(selectedPoint,point);
-            //离开陷阱
-            model.escapeTrap(selectedPoint, point);
+            //进入或离开陷阱
+            model.Trap(selectedPoint,point);
             //移动
             model.moveChessPiece(selectedPoint, point);
             view.setChessComponentAtGrid(point, view.removeChessComponentAtGrid(selectedPoint));
+            selectedPoint = null;
+            view.repaint();
             if (model.enterDen(point)){
                 denWin();
             }
-            selectedPoint = null;
             swapColor();
-            view.repaint();
+            if (currentPlayer == PlayerColor.BLUE){
+                roundCounter++;
+            }
             // TODO: if the chess enter Dens or Traps and so on
 
 
@@ -111,13 +122,28 @@ public class GameController implements GameListener {
             model.captureChessPiece(selectedPoint, point);
             view.removeChessComponentAtGrid(point);
             view.setChessComponentAtGrid(point, view.removeChessComponentAtGrid(selectedPoint));
-            solveWin();
             selectedPoint = null;
-            swapColor();
             view.repaint();
+            solveWin();
+            swapColor();
+        }
+        if (currentPlayer == PlayerColor.BLUE){
+            roundCounter ++;
         }
 
+    }
 
+    public void restart(){
+        model.initPieces();
+        view.initiateChessComponent(model);
+        view.initiateGridComponents();
+        currentPlayer = PlayerColor.BLUE;
+        selectedPoint = null;
+        winner = null;
+        view.repaint();
+    }
+
+    public void save(){
 
     }
 }

@@ -58,7 +58,7 @@ public class GameController implements GameListener {
         if (model.win(currentPlayer)){
             winner = currentPlayer;
             System.out.println("Winner is " + winner);
-            System.exit(0);
+
         }
     }
 
@@ -80,14 +80,15 @@ public class GameController implements GameListener {
             //移动
             model.moveChessPiece(selectedPoint, point);
             view.setChessComponentAtGrid(point, view.removeChessComponentAtGrid(selectedPoint));
-            selectedPoint = null;
-
-            view.repaint();
-            // TODO: if the chess enter Dens or Traps and so on
             if (model.enterDen(point)){
                 denWin();
             }
+            selectedPoint = null;
             swapColor();
+            view.repaint();
+            // TODO: if the chess enter Dens or Traps and so on
+
+
         }
     }
 
@@ -110,11 +111,13 @@ public class GameController implements GameListener {
             model.captureChessPiece(selectedPoint, point);
             view.removeChessComponentAtGrid(point);
             view.setChessComponentAtGrid(point, view.removeChessComponentAtGrid(selectedPoint));
+            solveWin();
             selectedPoint = null;
             swapColor();
             view.repaint();
         }
-        solveWin();
+
+
 
     }
 }

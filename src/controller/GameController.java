@@ -158,7 +158,7 @@ public class GameController implements GameListener {
             }
         }
 
-       File f = new File("C:\\Users\\PC\\Desktop");
+       File f = new File("./save.sav");
         try(ObjectOutputStream os = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(f)))) {
             os.writeObject(pieceInfo);
         }catch (IOException e){

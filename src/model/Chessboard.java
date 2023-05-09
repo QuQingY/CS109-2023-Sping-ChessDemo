@@ -54,10 +54,7 @@ public class Chessboard {
     public void initPieces() {
         for (int i = 0; i < Constant.CHESSBOARD_ROW_SIZE.getNum(); i++){
             for (int j = 0; j < Constant.CHESSBOARD_COL_SIZE.getNum(); j++){
-                ChessboardPoint  point = new ChessboardPoint(i,j);
-                if (getChessPieceAt(point) != null){
-                    removeChessPiece(point);
-                }
+                grid[i][j].removePiece();
             }
         }
         grid[6][0].setPiece(new ChessPiece(PlayerColor.BLUE, "Elephant",8));
@@ -65,16 +62,16 @@ public class Chessboard {
         grid[2][0].setPiece(new ChessPiece(PlayerColor.RED, "Mouse",1));
         grid[0][0].setPiece(new ChessPiece(PlayerColor.RED, "Lion",7));
         grid[1][1].setPiece(new ChessPiece(PlayerColor.RED, "Dog",3));
-        grid[2][2].setPiece(new ChessPiece(PlayerColor.RED, "Leopard",4));
-        grid[2][4].setPiece(new ChessPiece(PlayerColor.RED, "Wolf",5));
+        grid[2][2].setPiece(new ChessPiece(PlayerColor.RED, "Leopard",5));
+        grid[2][4].setPiece(new ChessPiece(PlayerColor.RED, "Wolf",4));
         grid[1][5].setPiece(new ChessPiece(PlayerColor.RED, "Cat",2));
         grid[0][6].setPiece(new ChessPiece(PlayerColor.RED, "Tiger",6));
         grid[6][0].setPiece(new ChessPiece(PlayerColor.BLUE, "Elephant",8));
         grid[6][6].setPiece(new ChessPiece(PlayerColor.BLUE, "Mouse",1));
         grid[8][6].setPiece(new ChessPiece(PlayerColor.BLUE, "Lion",7));
         grid[7][5].setPiece(new ChessPiece(PlayerColor.BLUE, "Dog",3));
-        grid[6][4].setPiece(new ChessPiece(PlayerColor.BLUE, "Leopard",4));
-        grid[6][2].setPiece(new ChessPiece(PlayerColor.BLUE, "Wolf",5));
+        grid[6][4].setPiece(new ChessPiece(PlayerColor.BLUE, "Leopard",5));
+        grid[6][2].setPiece(new ChessPiece(PlayerColor.BLUE, "Wolf",4));
         grid[7][1].setPiece(new ChessPiece(PlayerColor.BLUE, "Cat",2));
         grid[8][0].setPiece(new ChessPiece(PlayerColor.BLUE, "Tiger",6));
     }
@@ -249,10 +246,10 @@ public class Chessboard {
                     getChessPieceAt(selectedPoint).setRank(3);
                     break;
                 case "Leopard":
-                    getChessPieceAt(selectedPoint).setRank(4);
+                    getChessPieceAt(selectedPoint).setRank(5);
                     break;
                 case "Wolf":
-                    getChessPieceAt(selectedPoint).setRank(5);
+                    getChessPieceAt(selectedPoint).setRank(4);
                     break;
                 case "Tiger":
                     getChessPieceAt(selectedPoint).setRank(6);
@@ -304,5 +301,44 @@ public class Chessboard {
             }
         }
         return true;
+    }
+
+    public int[][] rankStorage(){
+        int[][] storage = new int[9][7];
+        for(int i = 0; i < 9; i++){
+            for( int j = 0; j < 7; j++){
+                ChessboardPoint point = new ChessboardPoint(i,j);
+                if (getChessPieceAt(point) == null){
+                    storage[i][j] = 0;
+                }
+                else {
+                    storage[i][j] = getChessPieceAt(point).getRank();
+                }
+            }
+        }
+        return storage;
+    }
+
+    public String[][][] playerAndNameStorage(){
+        String[][][] playStorage = new String[2][9][7];
+        for (int i = 0; i < 9; i++){
+            for (int j = 0; j < 7; j++){
+                ChessboardPoint point = new ChessboardPoint(i,j);
+                if (getChessPieceAt(point) == null){
+                    playStorage[0][i][j] = "N";
+                    playStorage[1][i][j] = "N";
+                }
+                else {
+                    if(getChessPieceOwner(point) == PlayerColor.RED){
+                        playStorage[0][i][j] = "Red";
+                    }
+                    else {
+                        playStorage[0][i][j] = "Blue";
+                    }
+                    playStorage[1][i][j] = getChessPieceAt(point).getName();
+                }
+            }
+        }
+        return playStorage;
     }
 }

@@ -5,6 +5,7 @@ import view.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) {
@@ -18,5 +19,6 @@ public class Main {
             GameController gameController = new GameController(myFrame.getMainPanel().getChessboardComponent(), new Chessboard());
 //            myFrame.getMainPanel().setVisible(true);
         });
+
     }
 }

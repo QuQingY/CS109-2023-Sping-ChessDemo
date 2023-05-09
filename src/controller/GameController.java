@@ -9,6 +9,9 @@ import model.ChessboardPoint;
 import view.CellComponent;
 import view.ChessComponent;
 import view.ChessboardComponent;
+import model.PieceInfo;
+
+import java.io.*;
 
 /**
  * Controller is the connection between model and view,
@@ -136,14 +139,40 @@ public class GameController implements GameListener {
     public void restart(){
         model.initPieces();
         view.initiateChessComponent(model);
-        view.initiateGridComponents();
-        currentPlayer = PlayerColor.BLUE;
         selectedPoint = null;
         winner = null;
         view.repaint();
+        currentPlayer = PlayerColor.RED;
     }
 
-    public void save(){
 
-    }
+
+
+    public void save() {
+        PieceInfo[][] pieceInfo = new PieceInfo[9][7];
+        for (int i = 0; i < 9; i++){
+            for (int j = 0; j < 7; j++){
+                pieceInfo[i][j] = new PieceInfo(model.rankStorage()[i][j],
+                        model.playerAndNameStorage()[1][i][j],
+                        model.playerAndNameStorage()[0][i][j]);
+            }
+        }
+
+       File f = new File("./save.sav");
+        try(ObjectOutputStream os = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(f)))) {
+            os.writeObject(pieceInfo);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+   }
+
+   public void load(String path){
+        File f = new File(path);
+        PieceInfo[][] pieceInfoFromTxt;
+        try (ObjectInputStream is = new ObjectInputStream(new BufferedInputStream(new FileInputStream(f)))){
+            pieceInfoFromTxt = (PieceInfo[][]) is.readObject();
+        }catch (IOException | ClassNotFoundException e){
+            e.printStackTrace();
+        }
+   }
 }

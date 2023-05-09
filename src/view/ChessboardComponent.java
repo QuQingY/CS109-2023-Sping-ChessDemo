@@ -222,4 +222,8 @@ public class ChessboardComponent extends JComponent {
             System.exit(0);
         }
     }
+
+    public GameController getGameController() {
+        return gameController;
+    }
 }

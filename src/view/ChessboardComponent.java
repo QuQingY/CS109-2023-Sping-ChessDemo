@@ -226,4 +226,12 @@ public class ChessboardComponent extends JComponent {
     public GameController getGameController() {
         return gameController;
     }
+
+    public CellComponent[][] getGridComponents() {
+        return gridComponents;
+    }
+
+    public int getCHESS_SIZE() {
+        return CHESS_SIZE;
+    }
 }

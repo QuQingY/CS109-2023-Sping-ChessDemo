@@ -2,14 +2,11 @@ package controller;
 
 
 import listener.GameListener;
-import model.Constant;
-import model.PlayerColor;
-import model.Chessboard;
-import model.ChessboardPoint;
+import model.*;
+import view.Animal.*;
 import view.CellComponent;
 import view.ChessComponent;
 import view.ChessboardComponent;
-import model.PieceInfo;
 
 import java.io.*;
 
@@ -168,11 +165,55 @@ public class GameController implements GameListener {
 
    public void load(String path){
         File f = new File(path);
-        PieceInfo[][] pieceInfoFromTxt;
+        PieceInfo[][] pieceInfoFromTxt = new PieceInfo[9][7];
         try (ObjectInputStream is = new ObjectInputStream(new BufferedInputStream(new FileInputStream(f)))){
             pieceInfoFromTxt = (PieceInfo[][]) is.readObject();
         }catch (IOException | ClassNotFoundException e){
             e.printStackTrace();
         }
+        for (int i = 0; i < Constant.CHESSBOARD_ROW_SIZE.getNum(); i++){
+            for (int j = 0; j < Constant.CHESSBOARD_COL_SIZE.getNum(); j++){
+                ChessboardPoint point = new ChessboardPoint(i,j);
+                if (model.getGrid()[i][j].getPiece() != null){
+                    model.getGrid()[i][j].removePiece();
+                    view.removeChessComponentAtGrid(point);
+                }
+                if (pieceInfoFromTxt[i][j].getRank() > 0){
+                    if (pieceInfoFromTxt[i][j].getPlayer().equals("Blue")){
+                        ChessPiece piece = new ChessPiece(PlayerColor.BLUE
+                                , pieceInfoFromTxt[i][j].getName()
+                                ,pieceInfoFromTxt[i][j].getRank());
+                        model.getGrid()[i][j].setPiece(piece);
+                    }
+
+                    if (pieceInfoFromTxt[i][j].getPlayer().equals("Red")){
+                        ChessPiece piece = new ChessPiece(PlayerColor.RED
+                                , pieceInfoFromTxt[i][j].getName()
+                                ,pieceInfoFromTxt[i][j].getRank());
+                        model.getGrid()[i][j].setPiece(piece);
+                    }
+                    switch(model.getGrid()[i][j].getPiece().getRank()){
+                        case 8:  view.getGridComponents()[i][j].add(new ElephantChessComponent(
+                                model.getChessPieceOwner(point),view.getCHESS_SIZE()
+                        ));break;
+                        case 7 : view.getGridComponents()[i][j].add(new LionChessComponent(
+                                model.getChessPieceOwner(point),view.getCHESS_SIZE()));break;
+                        case 6 : view.getGridComponents()[i][j].add(new TigerChessComponent(
+                                model.getChessPieceOwner(point),view.getCHESS_SIZE()));break;
+                        case 5 : view.getGridComponents()[i][j].add(new LeopardChessComponent(
+                                model.getChessPieceOwner(point),view.getCHESS_SIZE()));break;
+                        case 4 : view.getGridComponents()[i][j].add(new WolfChessComponent(
+                                model.getChessPieceOwner(point),view.getCHESS_SIZE()));break;
+                        case 3 : view.getGridComponents()[i][j].add(new DogChessComponent(
+                                model.getChessPieceOwner(point),view.getCHESS_SIZE()));break;
+                        case 2 : view.getGridComponents()[i][j].add(new CatChessComponent(
+                                model.getChessPieceOwner(point),view.getCHESS_SIZE()));break;
+                        case 1 : view.getGridComponents()[i][j].add(new MouseChessComponent(
+                                model.getChessPieceOwner(point),view.getCHESS_SIZE()));break;
+                    }
+                }
+            }
+        }
+        view.repaint();
    }
 }

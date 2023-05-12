@@ -36,6 +36,7 @@ public class ChessGamePanel extends ImagePanel {
         addChangeBackgroundButton();
         addSaveButton();
         addLoadButton();
+        addRestartButton();
     }
 
     public ChessboardComponent getChessboardComponent() {
@@ -115,6 +116,19 @@ public class ChessGamePanel extends ImagePanel {
             System.out.println("Click load");
             String path = JOptionPane.showInputDialog(this,"Input Path here");
             chessboardComponent.getGameController().load(path);
+        });
+    }
+
+    private void addRestartButton(){
+        JButton button = new JButton("Restart");
+        button.setLocation(HEIGHT, HEIGHT / 10 + 480);
+        button.setSize(200, 60);
+        button.setFont(new Font("Rockwell", Font.BOLD, 20));
+        add(button);
+
+        button.addActionListener(e -> {
+            System.out.println("Game Restarted");
+            chessboardComponent.getGameController().restart();
         });
     }
 

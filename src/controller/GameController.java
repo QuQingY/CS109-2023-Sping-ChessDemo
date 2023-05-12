@@ -49,6 +49,10 @@ public class GameController implements GameListener {
         view.repaint();
     }
 
+    public Chessboard getModel() {
+        return model;
+    }
+
     private void initialize() {
         for (int i = 0; i < Constant.CHESSBOARD_ROW_SIZE.getNum(); i++) {
             for (int j = 0; j < Constant.CHESSBOARD_COL_SIZE.getNum(); j++) {
@@ -111,11 +115,14 @@ public class GameController implements GameListener {
                 selectedPoint = point;
                 component.setSelected(true);
                 component.repaint();
+                view.showMove(point,component,view);
+
             }
         } else if (selectedPoint.equals(point)) {
             selectedPoint = null;
             component.setSelected(false);
             component.repaint();
+            view.showMove(point,component,view);
         }
         // TODO: Implement capture function
         else {

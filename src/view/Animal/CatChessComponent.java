@@ -11,6 +11,7 @@ public class CatChessComponent extends ChessComponent {
 
     private boolean selected;
 
+
     public CatChessComponent(PlayerColor owner, int size) {
         this.owner = owner;
         this.selected = false;
@@ -28,11 +29,14 @@ public class CatChessComponent extends ChessComponent {
     }
 
 
+
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
+//        ImageIcon imageIcon = new ImageIcon();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+//        g.drawImage(imageIcon.getImage(),1,1,this.getWidth()-1,this.getHeight()-1,this);
         Font font = new Font("楷体", Font.PLAIN, getWidth() / 2);
         g2.setFont(font);
         g2.setColor(owner.getColor());
@@ -41,5 +45,6 @@ public class CatChessComponent extends ChessComponent {
             g.setColor(Color.RED);
             g.drawOval(0, 0, getWidth() , getHeight());
         }
+
     }
 }

@@ -1,24 +1,19 @@
 package view;
 
+import model.ChessboardPoint;
 import model.PlayerColor;
+import model.Chessboard;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ChessComponent extends JComponent {
     private PlayerColor owner;
+    private boolean influenced;
 
     private boolean selected;
-
-    private boolean isInfluenced;
-
-    public void setInfluenced(boolean influenced) {
-        isInfluenced = influenced;
-    }
-
-    public boolean isInfluenced() {
-        return isInfluenced;
-    }
 
     public boolean isSelected() {
         return selected;
@@ -28,20 +23,21 @@ public class ChessComponent extends JComponent {
         this.selected = selected;
     }
 
-    public void paintComponent(Graphics g){
-        super.paintComponent(g);
-        if(isInfluenced()){
-            g.setColor(Color.GREEN);
-            g.drawOval(0, 0, getWidth() , getHeight());
-        }
-
+    public boolean isInfluenced() {
+        return influenced;
     }
 
-//    public ChessComponent(PlayerColor owner,int size){
-//        this.selected=false;
-//        this.owner=owner;
-//        setSize(size/2, size/2);
-//        setLocation(0,0);
-//        setVisible(true);
-//    }
+    public void setInfluenced(boolean influenced) {
+        this.influenced = influenced;
+    }
+
+     @Override
+     public void paintComponent(Graphics g){
+        super.paintComponent(g);
+         if(isInfluenced()){
+             g.setColor(Color.GREEN);
+             g.drawOval(0, 0, getWidth() , getHeight());
+         }
+
+     }
 }

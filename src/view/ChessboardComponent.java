@@ -241,51 +241,39 @@ public class ChessboardComponent extends JComponent {
     public void showMove(ChessboardPoint point, ChessComponent component, ChessboardComponent view) {
         List<ChessboardPoint> list = new ArrayList<>();
         Chessboard temp = this.gameController.getModel();
-
-
-        int[] dirRow = {1, -1, 0, 0};
-        int[] dirCol = {0, 0, 1, -1};
-        for (int i = 0; i < 4; i++) {
-            if (point.getRow() + dirRow[i] >= 0 && point.getRow() + dirRow[i] < 9 && point.getCol() + dirCol[i] >= 0 && point.getCol() + dirCol[i] < 7) {
-                System.out.println("n");
-                list.add(new ChessboardPoint(point.getRow() + dirRow[i]
-                        , point.getCol() + dirCol[i]));
-            }
-
-        }
         if (component.isSelected()) {
             System.out.println("nn");
-            for (int i = 0; i < list.size(); i++) {
-                if (temp.isValidMove(point, list.get(i))) {
-//                  view.getGridComponentAt(list.get(i)).getGraphics().drawOval(0,0,getWidth(),getHeight());
-                    view.getGridComponentAt(list.get(i)).setInfluenced(true);
-                    view.getGridComponentAt(list.get(i)).repaint();
-                    System.out.println("nnn");
-                }
-                if(temp.isValidCapture(point, list.get(i))){
-                    if(view.getGridComponentAt(list.get(i)).getComponents().length!=0) {
-                        ChessComponent chess = (ChessComponent) view.getGridComponentAt(list.get(i)).getComponents()[0];
-                        chess.setInfluenced(true);
-                        chess.repaint();
+            for (int i = 0; i < CHESSBOARD_ROW_SIZE.getNum(); i++) {
+                for (int j = 0; j < CHESSBOARD_COL_SIZE.getNum(); j++) {
+                    ChessboardPoint chessboardPoint = new ChessboardPoint(i, j);
+                    if (temp.isValidMove(point, chessboardPoint)) {
+                        view.getGridComponentAt(chessboardPoint).setInfluenced(true);
+                        view.getGridComponentAt(chessboardPoint).repaint();
+                    }
+                    if (temp.isValidCapture(point, chessboardPoint)) {
+                        if (view.getGridComponentAt(chessboardPoint).getComponents().length != 0) {
+                            ChessComponent chess = (ChessComponent) view.getGridComponentAt(chessboardPoint).getComponents()[0];
+                            chess.setInfluenced(true);
+                            chess.repaint();
+                        }
                     }
                 }
-
             }
-
         } else if (component.isSelected() == false) {
-            for (int i = 0; i < list.size(); i++) {
-//                if (temp.isValidMove(point, list.get(i))) {
-//                view.getGridComponentAt(list.get(i)).getGraphics().drawOval(0,0,getWidth(),getHeight());
-                view.getGridComponentAt(list.get(i)).setInfluenced(false);
-                if(view.getGridComponentAt(list.get(i)).getComponents().length!=0) {
-                    ChessComponent chess = (ChessComponent) view.getGridComponentAt(list.get(i)).getComponents()[0];
-                    chess.setInfluenced(false);
+            for (int i = 0; i < CHESSBOARD_ROW_SIZE.getNum(); i++) {
+                for (int j = 0; j < CHESSBOARD_COL_SIZE.getNum(); j++) {
+                    ChessboardPoint chessboardPoint = new ChessboardPoint(i,j);
+                    view.getGridComponentAt(chessboardPoint).setInfluenced(false);
+                    if(view.getGridComponentAt(chessboardPoint).getComponents().length!=0) {
+                        ChessComponent chess = (ChessComponent) view.getGridComponentAt(chessboardPoint).getComponents()[0];
+                        chess.setInfluenced(false);
+                    }
+                    view.getGridComponentAt(chessboardPoint).repaint();
                 }
-                view.getGridComponentAt(list.get(i)).repaint();
-//                    System.out.println("nnnnn");
-//                }
+            }
 
             }
+
         }
     }
-}
+

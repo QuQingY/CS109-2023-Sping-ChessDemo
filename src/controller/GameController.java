@@ -57,6 +57,10 @@ public class GameController implements GameListener {
         }
     }
 
+    public Chessboard getModel() {
+        return model;
+    }
+
     // after a valid move swap the player
     private void swapColor() {
         currentPlayer = currentPlayer == PlayerColor.BLUE ? PlayerColor.RED : PlayerColor.BLUE;
@@ -111,11 +115,13 @@ public class GameController implements GameListener {
                 selectedPoint = point;
                 component.setSelected(true);
                 component.repaint();
+                view.showMove(point,component,view);
             }
         } else if (selectedPoint.equals(point)) {
             selectedPoint = null;
             component.setSelected(false);
             component.repaint();
+            view.showMove(point,component,view);
         }
         // TODO: Implement capture function
         else {

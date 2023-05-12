@@ -8,7 +8,9 @@ import view.Animal.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static model.Constant.CHESSBOARD_COL_SIZE;
@@ -177,6 +179,7 @@ public class ChessboardComponent extends JComponent {
         getGridComponentAt(point).removeAll();
         getGridComponentAt(point).revalidate();
         chess.setSelected(false);
+        this.showMove(point, chess, this);
         return chess;
     }
 
@@ -233,5 +236,52 @@ public class ChessboardComponent extends JComponent {
 
     public int getCHESS_SIZE() {
         return CHESS_SIZE;
+    }
+
+    public void showMove(ChessboardPoint point, ChessComponent component, ChessboardComponent view) {
+        List<ChessboardPoint> list = new ArrayList<>();
+        Chessboard temp = this.gameController.getModel();
+
+
+        int[] dirRow = {1, -1, 0, 0};
+        int[] dirCol = {0, 0, 1, -1};
+        for (int i = 0; i < 4; i++) {
+            if (point.getRow() + dirRow[i] >= 0 && point.getRow() + dirRow[i] < 9 && point.getCol() + dirCol[i] >= 0 && point.getCol() + dirCol[i] < 7) {
+                System.out.println("n");
+                list.add(new ChessboardPoint(point.getRow() + dirRow[i]
+                        , point.getCol() + dirCol[i]));
+            }
+
+        }
+        if (component.isSelected()) {
+            System.out.println("nn");
+            for (int i = 0; i < list.size(); i++) {
+                if (temp.isValidMove(point, list.get(i))) {
+                    view.getGridComponentAt(list.get(i)).setInfluenced(true);
+                    view.getGridComponentAt(list.get(i)).repaint();
+                    System.out.println("nnn");
+                }
+                if(temp.isValidCapture(point, list.get(i))){
+                    if(view.getGridComponentAt(list.get(i)).getComponents().length!=0) {
+                        ChessComponent chess = (ChessComponent) view.getGridComponentAt(list.get(i)).getComponents()[0];
+                        chess.setInfluenced(true);
+                        chess.repaint();
+                    }
+                }
+
+            }
+
+        } else if (component.isSelected() == false) {
+            for (int i = 0; i < list.size(); i++) {
+                view.getGridComponentAt(list.get(i)).setInfluenced(false);
+                if(view.getGridComponentAt(list.get(i)).getComponents().length!=0) {
+                    ChessComponent chess = (ChessComponent) view.getGridComponentAt(list.get(i)).getComponents()[0];
+                    chess.setInfluenced(false);
+                }
+                view.getGridComponentAt(list.get(i)).repaint();
+
+
+            }
+        }
     }
 }

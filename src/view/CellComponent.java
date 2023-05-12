@@ -11,6 +11,16 @@ import java.awt.*;
 public class CellComponent extends JPanel {
     private Color background;
 
+    private boolean influenced;
+
+    public boolean isInfluenced() {
+        return influenced;
+    }
+
+    public void setInfluenced(boolean influenced) {
+        this.influenced = influenced;
+    }
+
     public CellComponent(Color background, Point location, int size) {
         setLayout(new GridLayout(1,1));
         setLocation(location);
@@ -22,6 +32,11 @@ public class CellComponent extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponents(g);
         g.setColor(background);
-        g.fillRect(1, 1, this.getWidth()-1, this.getHeight()-1);
+//        g.fillRect(1, 1, this.getWidth()-1, this.getHeight()-1);
+        if(this.influenced){
+            g.setColor(Color.BLUE);
+            g.drawOval(0, 0, getWidth() , getHeight());
+        }
+        this.repaint();
     }
 }

@@ -8,33 +8,20 @@ import java.awt.*;
  * but this class only cares how to draw Cells on ChessboardComponent
  */
 
-public class CellComponent extends ImagePanel {
-    private boolean influenced;
-//    private Color background;
+public class CellComponent extends JPanel {
+    private Color background;
 
-
-    public void setInfluenced(boolean influenced) {
-        this.influenced = influenced;
-    }
-
-    public CellComponent(Color background, Point location, int size, String path) {
-        super(path);
+    public CellComponent(Color background, Point location, int size) {
         setLayout(new GridLayout(1,1));
         setLocation(location);
         setSize(size, size);
-//        this.background = background;
+        this.background = background;
     }
 
     @Override
-    public void paintComponent(Graphics g) {
+    protected void paintComponent(Graphics g) {
         super.paintComponents(g);
-//        g.setColor(background);
-        g.drawImage(getImageIcon().getImage(),1,1,this.getWidth()-1,this.getHeight()-1,this);
-//        g.fillRect(1, 1, this.getWidth()-1, this.getHeight()-1);
-        if(this.influenced){
-            g.setColor(Color.BLUE);
-            g.drawOval(0, 0, getWidth() , getHeight());
-        }
-        this.repaint();
+        g.setColor(background);
+        g.fillRect(1, 1, this.getWidth()-1, this.getHeight()-1);
     }
 }

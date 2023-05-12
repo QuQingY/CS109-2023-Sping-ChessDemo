@@ -1,5 +1,8 @@
 package view;
 
+import com.sun.tools.javac.Main;
+import controller.GameController;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -9,7 +12,7 @@ import java.awt.*;
 public class ChessGamePanel extends ImagePanel {
     //    public final Dimension FRAME_SIZE ;
     private final int WIDTH;
-    private final int HEIGTH;
+    private final int HEIGHT;
 
     private final int ONE_CHESS_SIZE;
 
@@ -19,10 +22,10 @@ public class ChessGamePanel extends ImagePanel {
 //        setTitle("2023 CS109 Project Demo"); //设置标题
         super("D:\\JavaProject\\浅色1.jpg");
         this.WIDTH = width;
-        this.HEIGTH = height;
-        this.ONE_CHESS_SIZE = (HEIGTH * 4 / 5) / 9;
+        this.HEIGHT = height;
+        this.ONE_CHESS_SIZE = (HEIGHT * 4 / 5) / 9;
 
-        setSize(WIDTH, HEIGTH);
+        setSize(WIDTH, HEIGHT);
 //        setLocationRelativeTo(null); // Center the window.
 //        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); //设置程序关闭按键，如果点击右上方的叉就游戏全部关闭了
         setLayout(null);
@@ -30,7 +33,9 @@ public class ChessGamePanel extends ImagePanel {
 
         addChessboard();
         addLabel();
-        addHelloButton();
+        addChangeBackgroundButton();
+        addSaveButton();
+        addLoadButton();
     }
 
     public ChessboardComponent getChessboardComponent() {
@@ -46,7 +51,7 @@ public class ChessGamePanel extends ImagePanel {
      */
     private void addChessboard() {
         chessboardComponent = new ChessboardComponent(ONE_CHESS_SIZE);
-        chessboardComponent.setLocation(HEIGTH / 5, HEIGTH / 10);
+        chessboardComponent.setLocation(HEIGHT / 5, HEIGHT / 10);
         add(chessboardComponent);
     }
 
@@ -55,7 +60,7 @@ public class ChessGamePanel extends ImagePanel {
      */
     private void addLabel() {
         JLabel statusLabel = new JLabel("Sample label");
-        statusLabel.setLocation(HEIGTH, HEIGTH / 10);
+        statusLabel.setLocation(HEIGHT, HEIGHT / 10);
         statusLabel.setSize(200, 60);
         statusLabel.setFont(new Font("Rockwell", Font.BOLD, 20));
         add(statusLabel);
@@ -65,7 +70,7 @@ public class ChessGamePanel extends ImagePanel {
      * 在游戏面板中增加一个按钮，如果按下的话就会显示Hello, world!
      */
 
-    private void addHelloButton() {
+    private void addChangeBackgroundButton() {
         JButton button = new JButton("更换背景");
 //        button.addActionListener((e) -> JOptionPane.showMessageDialog(this, "Hello, world!"));
         button.addActionListener(e -> {
@@ -81,25 +86,37 @@ public class ChessGamePanel extends ImagePanel {
             }
             this.repaint();
         });
-        button.setLocation(HEIGTH, HEIGTH / 10 + 120);
+        button.setLocation(HEIGHT, HEIGHT / 10 + 120);
         button.setSize(200, 60);
         button.setFont(new Font("楷体", Font.BOLD, 20));
         add(button);
     }
 
-//    private void addLoadButton() {
-//        JButton button = new JButton("Load");
-//        button.setLocation(HEIGTH, HEIGTH / 10 + 240);
-//        button.setSize(200, 60);
-//        button.setFont(new Font("Rockwell", Font.BOLD, 20));
-//        add(button);
-//
-//        button.addActionListener(e -> {
-//            System.out.println("Click load");
-//            String path = JOptionPane.showInputDialog(this,"Input Path here");
-//            gameController.loadGameFromFile(path);
-//        });
-//    }
+    private void addSaveButton(){
+        JButton button = new JButton("Save");
+        button.setLocation(HEIGHT,HEIGHT/10 + 240);
+        button.setSize(200,60);
+        button.setFont(new Font("Rockwell",Font.BOLD,20));
+        add(button);
+        button.addActionListener(e -> {
+            System.out.println("Saving current game...");
+            chessboardComponent.getGameController().save();
+        });
+    }
+
+    private void addLoadButton() {
+        JButton button = new JButton("Load");
+        button.setLocation(HEIGHT, HEIGHT / 10 + 360);
+        button.setSize(200, 60);
+        button.setFont(new Font("Rockwell", Font.BOLD, 20));
+        add(button);
+
+        button.addActionListener(e -> {
+            System.out.println("Click load");
+            String path = JOptionPane.showInputDialog(this,"Input Path here");
+            chessboardComponent.getGameController().load(path);
+        });
+    }
 
 
 }

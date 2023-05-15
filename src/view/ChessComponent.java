@@ -12,6 +12,16 @@ public class ChessComponent extends JComponent {
 
     private boolean influenced;
 
+    private ImageIcon imageIcon;
+
+    public ImageIcon getImageIcon() {
+        return imageIcon;
+    }
+
+    public void setImageIcon(String path) {
+        this.imageIcon =new ImageIcon(path);
+    }
+
     public boolean isSelected() {
         return selected;
     }

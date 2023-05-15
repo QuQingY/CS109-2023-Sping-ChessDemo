@@ -2,6 +2,7 @@ package view;
 
 import com.sun.tools.javac.Main;
 import controller.GameController;
+import Stream.Audio;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,6 +38,7 @@ public class ChessGamePanel extends ImagePanel {
         addSaveButton();
         addLoadButton();
         addRestartButton();
+        addAudioButton();
     }
 
     public ChessboardComponent getChessboardComponent() {
@@ -129,6 +131,25 @@ public class ChessGamePanel extends ImagePanel {
         button.addActionListener(e -> {
             System.out.println("Game Restarted");
             chessboardComponent.getGameController().restart();
+        });
+    }
+
+    public void addAudioButton(){
+        JButton audioButton = new JButton("背景音乐");
+        audioButton.setLocation(HEIGHT, HEIGHT / 10 + 560);
+        audioButton.setSize(100,30);
+        audioButton.setFont(new Font("Rockwell", Font.BOLD, 10));
+        add(audioButton);
+
+        audioButton.addActionListener(e -> {
+
+            if(Audio.bgmAudio==null||(!Audio.bgmAudio.isAlive())){
+                Audio.playAudio("D:\\JavaProject\\bgMusic.wav");
+            } else if (Audio.bgmAudio.isAlive()) {
+                System.out.println("Here");
+                Audio.bgmAudio.stop();
+            }
+
         });
     }
 

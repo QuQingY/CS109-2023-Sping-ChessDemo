@@ -7,7 +7,11 @@ import view.Animal.*;
 import view.CellComponent;
 import view.ChessComponent;
 import view.ChessboardComponent;
+
+import Stream.Audio;
+
 import view.ChessGamePanel;
+
 
 import java.io.*;
 
@@ -105,9 +109,15 @@ public class GameController implements GameListener {
             if (currentPlayer == PlayerColor.BLUE){
                 roundCounter++;
             }
+
+
+            Audio.playVoice("D:\\JavaProject\\place.wav");
+
+
             panel.switchPlayer();
             panel.addRounds();
             // TODO: if the chess enter Dens or Traps and so on
+
 
 
         }

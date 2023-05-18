@@ -11,6 +11,8 @@ public class CatChessComponent extends ChessComponent {
 
     private boolean selected;
 
+
+
     public CatChessComponent(PlayerColor owner, int size) {
         this.owner = owner;
         this.selected = false;
@@ -32,11 +34,18 @@ public class CatChessComponent extends ChessComponent {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        Font font = new Font("楷体", Font.PLAIN, getWidth() / 2);
-        g2.setFont(font);
-        g2.setColor(owner.getColor());
-        g2.drawString("猫", getWidth() / 4, getHeight() * 5 / 8); // FIXME: Use library to find the correct offset.
+        if(owner==PlayerColor.RED){
+            setImageIcon("D:\\JavaProject\\动物1\\猫.png");
+            g.drawImage(getImageIcon().getImage(),0,0,getWidth(),getHeight(),this);
+        }else if(owner==PlayerColor.BLUE){
+            setImageIcon("D:\\JavaProject\\动物1\\MeowingCatIdleSide.gif");
+            g.drawImage(getImageIcon().getImage(),0,0,getWidth(),getHeight(),this);
+        }
+//        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+//        Font font = new Font("楷体", Font.PLAIN, getWidth() / 2);
+//        g2.setFont(font);
+//        g2.setColor(owner.getColor());
+//        g2.drawString("猫", getWidth() / 4, getHeight() * 5 / 8); // FIXME: Use library to find the correct offset.
         if (isSelected()) { // Highlights the model if selected.
             g.setColor(Color.RED);
             g.drawOval(0, 0, getWidth() , getHeight());

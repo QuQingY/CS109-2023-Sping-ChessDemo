@@ -8,12 +8,18 @@ import view.CellComponent;
 import view.ChessComponent;
 import view.ChessboardComponent;
 
+import view.ChessGamePanel;
 import Stream.Audio;
 
 import view.ChessGamePanel;
 
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import static model.Constant.CHESSBOARD_COL_SIZE;
+import static model.Constant.CHESSBOARD_ROW_SIZE;
 
 /**
  * Controller is the connection between model and view,
@@ -27,12 +33,15 @@ public class GameController implements GameListener {
 
     private Chessboard model;
     private ChessboardComponent view;
-
     private ChessGamePanel panel;
     private PlayerColor currentPlayer;
     private PlayerColor winner;
 
+    private List<Step> steps;
+
     private int roundCounter = 1;
+
+    private int stepCounter = 1;
 
     // Record whether there is a selected piece before
     private ChessboardPoint selectedPoint;
@@ -51,6 +60,10 @@ public class GameController implements GameListener {
         this.currentPlayer = PlayerColor.BLUE;
         this.panel = panel;
 
+        this.steps=new ArrayList<>();
+        steps.add(null);
+
+
         view.registerController(this);
         initialize();
         view.initiateChessComponent(model);
@@ -59,6 +72,10 @@ public class GameController implements GameListener {
 
     public Chessboard getModel() {
         return model;
+    }
+
+    public List<Step> getSteps() {
+        return steps;
     }
 
     private void initialize() {
@@ -100,15 +117,18 @@ public class GameController implements GameListener {
             //移动
             model.moveChessPiece(selectedPoint, point);
             view.setChessComponentAtGrid(point, view.removeChessComponentAtGrid(selectedPoint));
+            recordStep(selectedPoint,point);
             selectedPoint = null;
             view.repaint();
             if (model.enterDen(point)){
                 denWin();
             }
-            swapColor();
             if (currentPlayer == PlayerColor.BLUE){
-                roundCounter++;
+                roundCounter ++;
             }
+            swapColor();
+            stepCounter ++;
+
 
 
             Audio.playVoice("D:\\JavaProject\\place.wav");
@@ -142,33 +162,56 @@ public class GameController implements GameListener {
         }
         // TODO: Implement capture function
         else {
+            if(model.isValidCapture(selectedPoint,point)){
+                recordCaptureStep(selectedPoint,point,(ChessComponent) view.getGridComponentAt(point).getComponents()[0],model.getChessPieceAt(point));
+                stepCounter++;
+            }
+
             model.captureChessPiece(selectedPoint, point);
             view.removeChessComponentAtGrid(point);
             view.setChessComponentAtGrid(point, view.removeChessComponentAtGrid(selectedPoint));
             selectedPoint = null;
             view.repaint();
             solveWin();
-            swapColor();
             if (currentPlayer == PlayerColor.BLUE){
                 roundCounter ++;
             }
+            swapColor();
         }
+
 
         panel.switchPlayer();
         panel.addRounds();
 
-    }
+  }
 
     public void restart(){
+        for (int i = 0; i < CHESSBOARD_ROW_SIZE.getNum(); i++) {
+            for (int j = 0; j < CHESSBOARD_COL_SIZE.getNum(); j++) {
+                ChessboardPoint chessboardPoint = new ChessboardPoint(i, j);
+                view.getGridComponentAt(chessboardPoint).setInfluenced(false);
+                if (view.getGridComponentAt(chessboardPoint).getComponents().length != 0) {
+                    ChessComponent chess = (ChessComponent) view.getGridComponentAt(chessboardPoint).getComponents()[0];
+                    chess.setInfluenced(false);
+                }
+                view.getGridComponentAt(chessboardPoint).repaint();
+            }
+        }//将上一局showmove的痕迹擦掉
+
         model.initPieces();
         view.initiateChessComponent(model);
+        view.repaint();
         selectedPoint = null;
         winner = null;
+
         view.repaint();
         currentPlayer = PlayerColor.BLUE;
         roundCounter = 1;
         panel.switchPlayer();
         panel.addRounds();
+
+        currentPlayer = PlayerColor.RED;
+
     }
 
 
@@ -267,6 +310,58 @@ public class GameController implements GameListener {
         view.repaint();
        panel.switchPlayer();
        panel.addRounds();
+   }
+
+   public void recordStep(ChessboardPoint selectedPoint, ChessboardPoint point){
+        if(stepCounter<steps.size()){
+            steps.remove(stepCounter);
+            steps.add(stepCounter,new Step(selectedPoint,point,currentPlayer));
+        }
+        if(stepCounter>=steps.size()){
+            steps.add(stepCounter,new Step(selectedPoint,point,currentPlayer));
+        }
+   }
+
+   public void recordCaptureStep(ChessboardPoint selectedPoint, ChessboardPoint point,ChessComponent component, ChessPiece piece){
+       if(stepCounter<steps.size()){
+           steps.remove(stepCounter);
+           steps.add(stepCounter,new Step(selectedPoint,point,currentPlayer,component,piece,true));
+       }
+       if(stepCounter>=steps.size()){
+           steps.add(stepCounter,new Step(selectedPoint,point,currentPlayer,component,piece,true));
+       }
+   }
+
+   public void undo(){
+        if(stepCounter>1){
+            Step step = steps.get(stepCounter-1);
+            if (steps.get(stepCounter - 1).isCapture()) {
+                model.moveChessPiece(steps.get(stepCounter-1).getPoint(), steps.get(stepCounter-1).getSelected_point());
+                view.setChessComponentAtGrid(steps.get(stepCounter-1).getSelected_point()
+                        , view.removeChessComponentAtGrid(steps.get(stepCounter-1).getPoint()));
+                model.setChessPiece(step.getPoint(),step.getPiece());
+                view.setChessComponentAtGrid(step.getPoint(),step.getComponent());
+                stepCounter--;
+                swapColor();
+                panel.switchPlayer();
+                if (currentPlayer == PlayerColor.BLUE){
+                    roundCounter --;
+                    panel.addRounds();
+                }
+            }else{
+                model.moveChessPiece(steps.get(stepCounter-1).getPoint(), steps.get(stepCounter-1).getSelected_point());
+                view.setChessComponentAtGrid(steps.get(stepCounter-1).getSelected_point()
+                        , view.removeChessComponentAtGrid(steps.get(stepCounter-1).getPoint()));
+                stepCounter--;
+                swapColor();
+                panel.switchPlayer();
+                if (currentPlayer == PlayerColor.BLUE){
+                    roundCounter --;
+                    panel.addRounds();
+                }
+            }
+        }
+
    }
 
 }

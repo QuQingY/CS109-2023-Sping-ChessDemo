@@ -15,7 +15,7 @@ public class Chessboard {
         initPieces();
     }
 
-    private void initGrid() {
+    public void initGrid() {
         for (int i = 0; i < Constant.CHESSBOARD_ROW_SIZE.getNum(); i++) {
             for (int j = 0; j < Constant.CHESSBOARD_COL_SIZE.getNum(); j++) {
                 grid[i][j] = new Cell();
@@ -76,7 +76,7 @@ public class Chessboard {
         grid[8][0].setPiece(new ChessPiece(PlayerColor.BLUE, "Tiger",6));
     }
 
-    private ChessPiece getChessPieceAt(ChessboardPoint point) {
+    public ChessPiece getChessPieceAt(ChessboardPoint point) {
         return getGridAt(point).getPiece();
     }
 
@@ -94,7 +94,7 @@ public class Chessboard {
         return chessPiece;
     }
 
-    private void setChessPiece(ChessboardPoint point, ChessPiece chessPiece) {
+    public void setChessPiece(ChessboardPoint point, ChessPiece chessPiece) {
         getGridAt(point).setPiece(chessPiece);
     }
 

@@ -16,7 +16,7 @@ public class Main {
             myFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 //            ChessGamePanel mainPanel = new ChessGamePanel(1100, 810);
 
-            GameController gameController = new GameController(myFrame.getMainPanel().getChessboardComponent(), new Chessboard());
+            GameController gameController = new GameController(myFrame.getMainPanel().getChessboardComponent(), new Chessboard(),myFrame.getMainPanel());
 //            myFrame.getMainPanel().setVisible(true);
         });
 

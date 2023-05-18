@@ -2,6 +2,7 @@ package view;
 
 import com.sun.tools.javac.Main;
 import controller.GameController;
+import model.PlayerColor;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,6 +16,23 @@ public class ChessGamePanel extends ImagePanel {
     private final int HEIGHT;
 
     private final int ONE_CHESS_SIZE;
+
+    private JLabel player = this.addPlayerLabel();
+
+    private JLabel round = this.addRoundCounterLabel();
+
+    public void switchPlayer(){
+        if (chessboardComponent.getGameController().getCurrentPlayer() == PlayerColor.RED){
+            player.setText("Red's turn");
+        }
+        else{
+            player.setText("Blue's turn");
+        }
+    }
+
+    public void addRounds(){
+        round.setText("Round: "+chessboardComponent.getGameController().getRoundCounter());
+    }
 
 
     private ChessboardComponent chessboardComponent;
@@ -32,11 +50,15 @@ public class ChessGamePanel extends ImagePanel {
 
 
         addChessboard();
-        addLabel();
         addChangeBackgroundButton();
         addSaveButton();
         addLoadButton();
         addRestartButton();
+        addPlayerLabel();
+        addRoundCounterLabel();
+        add(player);
+        add(round);
+
     }
 
     public ChessboardComponent getChessboardComponent() {
@@ -59,12 +81,28 @@ public class ChessGamePanel extends ImagePanel {
     /**
      * 在游戏面板中添加标签
      */
-    private void addLabel() {
-        JLabel statusLabel = new JLabel("Sample label");
-        statusLabel.setLocation(HEIGHT, HEIGHT / 10);
-        statusLabel.setSize(200, 60);
-        statusLabel.setFont(new Font("Rockwell", Font.BOLD, 20));
-        add(statusLabel);
+    public  JLabel addPlayerLabel() {
+        String currentPlayer = "Blue's turn";
+        JLabel l = new JLabel(currentPlayer);
+        l.setLocation(HEIGHT + 240, HEIGHT / 10);
+        l.setSize(200, 60);
+        l.setFont(new Font("Rockwell", Font.BOLD, 20));
+
+        return l;
+
+    }
+
+
+
+
+    public JLabel addRoundCounterLabel() {
+        String currentRound= "Round: 1" ;
+        JLabel l = new JLabel(currentRound);
+        l.setLocation(HEIGHT, HEIGHT / 10);
+        l.setSize(200, 60);
+        l.setFont(new Font("Rockwell", Font.BOLD, 20));
+
+        return l;
     }
 
     /**

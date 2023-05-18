@@ -247,20 +247,17 @@ public class ChessboardComponent extends JComponent {
         int[] dirCol = {0, 0, 1, -1};
         for (int i = 0; i < 4; i++) {
             if (point.getRow() + dirRow[i] >= 0 && point.getRow() + dirRow[i] < 9 && point.getCol() + dirCol[i] >= 0 && point.getCol() + dirCol[i] < 7) {
-                System.out.println("n");
                 list.add(new ChessboardPoint(point.getRow() + dirRow[i]
                         , point.getCol() + dirCol[i]));
             }
 
         }
         if (component.isSelected()) {
-            System.out.println("nn");
             for (int i = 0; i < list.size(); i++) {
                 if (temp.isValidMove(point, list.get(i))) {
 //                  view.getGridComponentAt(list.get(i)).getGraphics().drawOval(0,0,getWidth(),getHeight());
                     view.getGridComponentAt(list.get(i)).setInfluenced(true);
                     view.getGridComponentAt(list.get(i)).repaint();
-                    System.out.println("nnn");
                 }
                 if(temp.isValidCapture(point, list.get(i))){
                     if(view.getGridComponentAt(list.get(i)).getComponents().length!=0) {

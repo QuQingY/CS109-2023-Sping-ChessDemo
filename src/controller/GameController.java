@@ -7,7 +7,11 @@ import view.Animal.*;
 import view.CellComponent;
 import view.ChessComponent;
 import view.ChessboardComponent;
+
 import Stream.Audio;
+
+import view.ChessGamePanel;
+
 
 import java.io.*;
 
@@ -23,6 +27,8 @@ public class GameController implements GameListener {
 
     private Chessboard model;
     private ChessboardComponent view;
+
+    private ChessGamePanel panel;
     private PlayerColor currentPlayer;
     private PlayerColor winner;
 
@@ -39,10 +45,11 @@ public class GameController implements GameListener {
         return currentPlayer;
     }
 
-    public GameController(ChessboardComponent view, Chessboard model) {
+    public GameController(ChessboardComponent view, Chessboard model,ChessGamePanel panel) {
         this.view = view;
         this.model = model;
         this.currentPlayer = PlayerColor.BLUE;
+        this.panel = panel;
 
         view.registerController(this);
         initialize();
@@ -103,8 +110,13 @@ public class GameController implements GameListener {
                 roundCounter++;
             }
 
+
             Audio.playVoice("D:\\JavaProject\\place.wav");
 
+
+            panel.switchPlayer();
+            panel.addRounds();
+            // TODO: if the chess enter Dens or Traps and so on
 
 
 
@@ -137,10 +149,13 @@ public class GameController implements GameListener {
             view.repaint();
             solveWin();
             swapColor();
+            if (currentPlayer == PlayerColor.BLUE){
+                roundCounter ++;
+            }
         }
-        if (currentPlayer == PlayerColor.BLUE){
-            roundCounter ++;
-        }
+
+        panel.switchPlayer();
+        panel.addRounds();
 
     }
 
@@ -150,21 +165,34 @@ public class GameController implements GameListener {
         selectedPoint = null;
         winner = null;
         view.repaint();
-        currentPlayer = PlayerColor.RED;
+        currentPlayer = PlayerColor.BLUE;
+        roundCounter = 1;
+        panel.switchPlayer();
+        panel.addRounds();
     }
 
 
 
 
     public void save() {
-        PieceInfo[][] pieceInfo = new PieceInfo[9][7];
+        PieceInfo[][][] pieceInfo = new PieceInfo[3][][];
+        pieceInfo[0] = new PieceInfo[1][1];
+        pieceInfo[1] = new PieceInfo[1][1];
+        pieceInfo[2] = new PieceInfo[9][7];
         for (int i = 0; i < 9; i++){
             for (int j = 0; j < 7; j++){
-                pieceInfo[i][j] = new PieceInfo(model.rankStorage()[i][j],
+                pieceInfo[2][i][j] = new PieceInfo(model.rankStorage()[i][j],
                         model.playerAndNameStorage()[1][i][j],
                         model.playerAndNameStorage()[0][i][j]);
             }
         }
+        pieceInfo[0][0][0] = new PieceInfo(roundCounter,"0","0");
+        if (currentPlayer == PlayerColor.RED){
+            pieceInfo[1][0][0] = new PieceInfo(2,"0","0");
+        }if (currentPlayer == PlayerColor.BLUE){
+            pieceInfo[1][0][0] = new PieceInfo(1,"0","0");
+        }
+
 
        File f = new File("./save.sav");
         try(ObjectOutputStream os = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(f)))) {
@@ -176,12 +204,23 @@ public class GameController implements GameListener {
 
    public void load(String path){
         File f = new File(path);
-        PieceInfo[][] pieceInfoFromTxt = new PieceInfo[9][7];
+       PieceInfo[][][] pieceInfoFromTxt = new PieceInfo[3][][];
+       pieceInfoFromTxt[0] = new PieceInfo[1][1];
+       pieceInfoFromTxt[1] = new PieceInfo[1][1];
+       pieceInfoFromTxt[2] = new PieceInfo[9][7];
         try (ObjectInputStream is = new ObjectInputStream(new BufferedInputStream(new FileInputStream(f)))){
-            pieceInfoFromTxt = (PieceInfo[][]) is.readObject();
+            pieceInfoFromTxt = (PieceInfo[][][]) is.readObject();
         }catch (IOException | ClassNotFoundException e){
             e.printStackTrace();
         }
+
+        this.roundCounter = pieceInfoFromTxt[0][0][0].getRank();
+        if (pieceInfoFromTxt[1][0][0].getRank() == 1){
+            currentPlayer = PlayerColor.BLUE;
+        }else {
+            currentPlayer = PlayerColor.RED;
+        }
+
         for (int i = 0; i < Constant.CHESSBOARD_ROW_SIZE.getNum(); i++){
             for (int j = 0; j < Constant.CHESSBOARD_COL_SIZE.getNum(); j++){
                 ChessboardPoint point = new ChessboardPoint(i,j);
@@ -189,18 +228,18 @@ public class GameController implements GameListener {
                     model.getGrid()[i][j].removePiece();
                     view.removeChessComponentAtGrid(point);
                 }
-                if (pieceInfoFromTxt[i][j].getRank() > 0){
-                    if (pieceInfoFromTxt[i][j].getPlayer().equals("Blue")){
+                if (pieceInfoFromTxt[2][i][j].getRank() > 0){
+                    if (pieceInfoFromTxt[2][i][j].getPlayer().equals("Blue")){
                         ChessPiece piece = new ChessPiece(PlayerColor.BLUE
-                                , pieceInfoFromTxt[i][j].getName()
-                                ,pieceInfoFromTxt[i][j].getRank());
+                                , pieceInfoFromTxt[2][i][j].getName()
+                                ,pieceInfoFromTxt[2][i][j].getRank());
                         model.getGrid()[i][j].setPiece(piece);
                     }
 
-                    if (pieceInfoFromTxt[i][j].getPlayer().equals("Red")){
+                    if (pieceInfoFromTxt[2][i][j].getPlayer().equals("Red")){
                         ChessPiece piece = new ChessPiece(PlayerColor.RED
-                                , pieceInfoFromTxt[i][j].getName()
-                                ,pieceInfoFromTxt[i][j].getRank());
+                                , pieceInfoFromTxt[2][i][j].getName()
+                                ,pieceInfoFromTxt[2][i][j].getRank());
                         model.getGrid()[i][j].setPiece(piece);
                     }
                     switch(model.getGrid()[i][j].getPiece().getRank()){
@@ -226,5 +265,8 @@ public class GameController implements GameListener {
             }
         }
         view.repaint();
+       panel.switchPlayer();
+       panel.addRounds();
    }
+
 }

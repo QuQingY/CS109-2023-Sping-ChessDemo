@@ -38,7 +38,9 @@ public class ChessGamePanel extends ImagePanel {
     }
 
 
+
     private ChessboardComponent chessboardComponent;
+
     public ChessGamePanel(int width, int height) {
 //        setTitle("2023 CS109 Project Demo"); //设置标题
         super("D:\\JavaProject\\浅色1.jpg");
@@ -58,16 +60,21 @@ public class ChessGamePanel extends ImagePanel {
         addLoadButton();
         addRestartButton();
         addAudioButton();
+        addUndoButton();
         addPlayerLabel();
         addRoundCounterLabel();
         add(player);
         add(round);
-
     }
 
     public ChessboardComponent getChessboardComponent() {
         return chessboardComponent;
     }
+    public ChessGamePanel getChessGamePanel(){
+        return this;
+    }
+
+
 
     public void setChessboardComponent(ChessboardComponent chessboardComponent) {
         this.chessboardComponent = chessboardComponent;
@@ -175,7 +182,7 @@ public class ChessGamePanel extends ImagePanel {
     }
 
     public void addAudioButton(){
-        JButton audioButton = new JButton("背景音乐");
+        JButton audioButton = new JButton("BGM");
         audioButton.setLocation(HEIGHT, HEIGHT / 10 + 560);
         audioButton.setSize(100,30);
         audioButton.setFont(new Font("Rockwell", Font.BOLD, 10));
@@ -190,6 +197,18 @@ public class ChessGamePanel extends ImagePanel {
                 Audio.bgmAudio.stop();
             }
 
+        });
+    }
+
+    public void addUndoButton(){
+        JButton undoButton = new JButton("Undo");
+        undoButton.setLocation(HEIGHT+250, HEIGHT / 10 +120 );
+        undoButton.setSize(100,30);
+        undoButton.setFont(new Font("Rockwell", Font.BOLD, 10));
+        add(undoButton);
+
+        undoButton.addActionListener(e -> {
+            chessboardComponent.getGameController().undo();
         });
     }
 

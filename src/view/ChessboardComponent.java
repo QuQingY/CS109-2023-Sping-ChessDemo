@@ -43,6 +43,9 @@ public class ChessboardComponent extends JComponent {
         initiateGridComponents();
     }
 
+     public int getChessSize(){
+        return CHESS_SIZE;
+     }
 
     /**
      * This method represents how to initiate ChessComponent
@@ -198,7 +201,7 @@ public class ChessboardComponent extends JComponent {
         return chess;
     }
 
-    private CellComponent getGridComponentAt(ChessboardPoint point) {
+    public CellComponent getGridComponentAt(ChessboardPoint point) {
         return gridComponents[point.getRow()][point.getCol()];
     }
 

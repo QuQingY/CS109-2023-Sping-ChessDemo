@@ -1,7 +1,11 @@
 package view;
 
+import model.PieceInfo;
+
 import javax.swing.*;
 import java.awt.*;
+import java.io.*;
+import java.util.UUID;
 
 public class MyFrame extends JFrame {
 //    private final int WIDTH;
@@ -109,25 +113,80 @@ public class MyFrame extends JFrame {
         JLabel password = makeLabel("密码",20);
         JTextField textField = new JTextField(20);
         JPasswordField passwordField = new JPasswordField(20);
+        UserInfo userInfo = new UserInfo();
 
         firmButton.addActionListener(e -> {
             if(Label.equals("register")){
-                UserInfo.setUsername(textField.getText());
-                UserInfo.setPassword(passwordField.getPassword());
+                userInfo.setUsername(textField.getText());
+                userInfo.setPassword(passwordField.getPassword());
                 cardLayout.show(this.getContentPane(),"first");
+
+                File file = new File("./users.sav/");
+                UserInfo[] users = new UserInfo[100];
+                if (!file.exists()){
+
+                    users[0] = userInfo;
+                    try(ObjectOutputStream os = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
+                        os.writeObject(users);
+                    }catch (IOException g){
+                        g.printStackTrace();
+                    }
+                }else {
+                    try (ObjectInputStream is = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)))){
+                        users = (UserInfo[]) is.readObject();
+                    }catch (IOException | ClassNotFoundException g){
+                        g.printStackTrace();
+                    }
+                    for (int i = 0; i < users.length; i++){
+                        if (users[i] != null && users[i].getUsername().equals(userInfo.getUsername())){
+                            JOptionPane.showMessageDialog(this, "User already registered.");
+                            break;
+                        }
+                        if (users[i] == null){
+                            users[i] = userInfo;
+                            break;
+                        }
+                    }
+                    try(ObjectOutputStream os = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
+                        os.writeObject(users);
+                    }catch (IOException g){
+                        g.printStackTrace();
+                    }
+                }
+
             }else{
                 char[] input = passwordField.getPassword();
-                if(textField.getText().equals(UserInfo.getUsername())&&
-                      UserInfo.isPasswordCorrect(input) ){
+                File file = new File("./users.sav/");
+                UserInfo[] users = new UserInfo[100];
+                try (ObjectInputStream is = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)))){
+                    users = (UserInfo[]) is.readObject();
+                }catch (IOException | ClassNotFoundException g){
+                    g.printStackTrace();
+                }
+                for (int i = 0; i < users.length; i++){
+                    if (textField.getText().equals(users[i].getUsername())){
+                        if (userInfo.isPasswordCorrect(input)){
+                            cardLayout.show(this.getContentPane(),"main");
+                            System.out.println("Yes!");
+                            break;
+                        }
+                        else {
+                            System.out.println("something wrong in your input?");
+                            break;
+                        }
+                    }
+                }
+/*                if(textField.getText().equals(userInfo.getUsername())&&
+                      userInfo.isPasswordCorrect(input) ){
                     cardLayout.show(this.getContentPane(),"main");
                     System.out.println("Yes!");
                 }else {
-                    System.out.println("something wrong in your input?");
+                   System.out.println("something wrong in your input?");
 //                    for (char a:
 //                         UserInfo.getPassword()) {
 //                        System.out.print(a+"");
 //                    }
-                }
+                }*/
             }
         });
 

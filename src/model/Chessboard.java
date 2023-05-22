@@ -135,9 +135,9 @@ public class Chessboard {
         }
         if (calculateDistance(src,dest) > 1 &&
                 getChessPieceAt(src).getRank() == 7 || getChessPieceAt(src).getRank() == 6) {
-            if (src.getRow() != dest.getRow() && src.getCol() != dest.getCol()) {
-                return false;
-            }//判断是否在同一行/列
+            if (src.getRow() == dest.getRow() || src.getCol() == dest.getCol()) {
+
+            //判断是否在同一行/列
 
             if (src.getRow() == dest .getRow()){
                 int row = src .getRow();
@@ -168,7 +168,7 @@ public class Chessboard {
             }
 
             return true;
-        }
+        }}
         return calculateDistance(src, dest) == 1;
     }
 

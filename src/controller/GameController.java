@@ -14,6 +14,7 @@ import Stream.Audio;
 import view.ChessGamePanel;
 
 
+import javax.swing.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -123,17 +124,13 @@ public class GameController implements GameListener {
             if (model.enterDen(point)){
                 denWin();
             }
+
+            swapColor();
             if (currentPlayer == PlayerColor.BLUE){
                 roundCounter ++;
             }
-            swapColor();
             stepCounter ++;
-
-
-
             Audio.playVoice("D:\\JavaProject\\place.wav");
-
-
             panel.switchPlayer();
             panel.addRounds();
             // TODO: if the chess enter Dens or Traps and so on
@@ -173,10 +170,11 @@ public class GameController implements GameListener {
             selectedPoint = null;
             view.repaint();
             solveWin();
+
+            swapColor();
             if (currentPlayer == PlayerColor.BLUE){
                 roundCounter ++;
             }
-            swapColor();
         }
 
 
@@ -210,7 +208,6 @@ public class GameController implements GameListener {
         panel.switchPlayer();
         panel.addRounds();
 
-        currentPlayer = PlayerColor.RED;
 
     }
 
@@ -236,8 +233,28 @@ public class GameController implements GameListener {
             pieceInfo[1][0][0] = new PieceInfo(1,"0","0");
         }
 
+        String Pathname = JOptionPane.showInputDialog(view,"Please enter the new pathname");
+       File f = new File(Pathname);
+        if(f.exists()){
+            int result = JOptionPane.showConfirmDialog(view, "Do you want to replace the file?", "File already exists.", JOptionPane.YES_NO_OPTION);
+            if (result == JOptionPane.YES_OPTION) {
+                try(ObjectOutputStream os = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(f)))) {
+                    os.writeObject(pieceInfo);
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+            if (result == JOptionPane.NO_OPTION) {
+                String newPathname = JOptionPane.showInputDialog(view,"Please enter the new pathname");
+                File file = new File(newPathname);
+                try(ObjectOutputStream os = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
+                    os.writeObject(pieceInfo);
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
 
-       File f = new File("./save.sav");
+        }
         try(ObjectOutputStream os = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(f)))) {
             os.writeObject(pieceInfo);
         }catch (IOException e){

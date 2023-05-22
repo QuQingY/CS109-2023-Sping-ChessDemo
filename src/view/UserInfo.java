@@ -1,14 +1,16 @@
 package view;
 
-public class UserInfo {
-    private static String username;
-    private static char[] password = new char[20];
+import java.io.Serializable;
 
-    public  static void setUsername(String username1) {
+public class UserInfo implements Serializable {
+    private  String username;
+    private  char[] password = new char[20];
+
+    public  void setUsername(String username1) {
         username = username1;
     }
 
-    public static void setPassword(char[] password1) {
+    public   void setPassword(char[] password1) {
         if(password1.length>20){
             System.out.println("invalid password, error: more than 20 characters ");
         }else{
@@ -18,15 +20,15 @@ public class UserInfo {
         }
     }
 
-    public static String getUsername(){
+    public  String getUsername(){
         return username;
     }
 
-    public static char[] getPassword() {
+    public  char[] getPassword() {
         return password;
     }
 
-    public static boolean isPasswordCorrect(char[] in){
+    public  boolean isPasswordCorrect(char[] in){
         boolean sign = true;
         char a[] = getPassword();
         for (int i=0;i< getPassword().length;i++) {

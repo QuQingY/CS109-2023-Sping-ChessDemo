@@ -254,11 +254,12 @@ public class GameController implements GameListener {
                 }
             }
 
-        }
-        try(ObjectOutputStream os = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(f)))) {
-            os.writeObject(pieceInfo);
-        }catch (IOException e){
-            e.printStackTrace();
+        }else {
+            try(ObjectOutputStream os = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(f)))) {
+             os.writeObject(pieceInfo);
+            }catch (IOException e){
+                e.printStackTrace();
+            }
         }
    }
 
@@ -361,7 +362,7 @@ public class GameController implements GameListener {
                 stepCounter--;
                 swapColor();
                 panel.switchPlayer();
-                if (currentPlayer == PlayerColor.BLUE){
+                if (currentPlayer == PlayerColor.BLUE && roundCounter > 1){
                     roundCounter --;
                     panel.addRounds();
                 }
@@ -372,7 +373,7 @@ public class GameController implements GameListener {
                 stepCounter--;
                 swapColor();
                 panel.switchPlayer();
-                if (currentPlayer == PlayerColor.BLUE){
+                if (currentPlayer == PlayerColor.BLUE && roundCounter > 1){
                     roundCounter --;
                     panel.addRounds();
                 }

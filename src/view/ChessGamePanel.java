@@ -7,12 +7,14 @@ import Stream.Audio;
 
 import model.PlayerColor;
 
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.io.*;
 
 /**
  * 这个类表示游戏过程中的整个游戏界面，是一切的载体
@@ -25,12 +27,14 @@ public class ChessGamePanel extends ImagePanel {
     private final int ONE_CHESS_SIZE;
 
 
+    private UserInfo currentUser;
 
     private JLabel player = this.addPlayerLabel();
 
     private JLabel round = this.addRoundCounterLabel();
     private JLabel redtime = addRedTimeLable();
     private JLabel bluetime = addBLueTimeLabel();
+
 
     public void switchPlayer(){
         if (chessboardComponent.getGameController().getCurrentPlayer() == PlayerColor.RED){
@@ -143,6 +147,7 @@ public class ChessGamePanel extends ImagePanel {
 
 
 
+
     public JLabel addRoundCounterLabel() {
         String currentRound= "Round: 1" ;
         JLabel l = new JLabel(currentRound);
@@ -248,6 +253,25 @@ public class ChessGamePanel extends ImagePanel {
             chessboardComponent.getGameController().undo();
         });
     }
+
+    public UserInfo getCurrentUser(){
+        return currentUser;
+    }
+
+    public UserInfo readCurrentUser(){
+        File file = new File("./users.sav/");
+        UserInfo[] userInfo = new UserInfo[1];
+        try (ObjectInputStream is = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)))){
+            userInfo = (UserInfo[]) is.readObject();
+        }catch (IOException | ClassNotFoundException g){
+            g.printStackTrace();
+        }
+        currentUser = userInfo[0];
+
+
+        return currentUser;
+    }
+
 
 
 }

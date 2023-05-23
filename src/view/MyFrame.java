@@ -11,6 +11,8 @@ public class MyFrame extends JFrame {
 //    private final int WIDTH;
 //    private final int HEIGHT;
     private CardLayout cardLayout;
+
+    private UserInfo currentUser;
     ChessGamePanel mainPanel = new ChessGamePanel(1100, 810);
 
     public MyFrame(){
@@ -43,6 +45,7 @@ public class MyFrame extends JFrame {
         firstPanel.add(registerButton);
         registerButton.addActionListener(e -> {cardLayout.show(this.getContentPane(),"register");});
         this.add(firstPanel,"first");
+        firstPanel.add(addRankingList());
 
     }
 
@@ -165,8 +168,11 @@ public class MyFrame extends JFrame {
                 for (int i = 0; i < users.length; i++){
                     if (textField.getText().equals(users[i].getUsername())){
                         if (userInfo.isPasswordCorrect(input)){
+                            currentUser = users[i];
+                            System.out.println(currentUser.getUsername());
                             cardLayout.show(this.getContentPane(),"main");
                             System.out.println("Yes!");
+                            storeCurrentUser();
                             break;
                         }
                         else {
@@ -200,5 +206,62 @@ public class MyFrame extends JFrame {
 
     public ChessGamePanel getMainPanel() {
         return mainPanel;
+    }
+
+    public JTable addRankingList(){
+        File file = new File("./users.sav/");
+        UserInfo[] users = new UserInfo[100];
+        try (ObjectInputStream is = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)))){
+            users = (UserInfo[]) is.readObject();
+        }catch (IOException | ClassNotFoundException g){
+            g.printStackTrace();
+        }
+        for (int i = 0; i < users.length -1 ; i++){
+            for (int j = 0; j < users.length -i -1 ; j++){
+                if (users[j] != null && users[j+1] != null){
+                    if (users[j].getScore() < users[j+1].getScore()){
+                        UserInfo temp = users[j];
+                        users[j] = users[j+1];
+                        users[j+1] = temp;
+                    }
+                }
+                else {
+                    break;
+                }
+            }
+        }
+
+
+        String[] colNames = {"Player","Score"};
+        String[][] topUsers = new String[10][2];
+        for (int i = 0; i < 10 ; i++){
+            if (users[i] != null){
+                topUsers[i][0] = users[i].getUsername();
+                topUsers[i][1] =  String.valueOf(users[i].getScore());
+            }
+            else {
+                break;
+            }
+        }
+        JTable Rank = new JTable(topUsers,colNames);
+        Rank.setSize(20,400);
+        return Rank;
+    }
+
+    public void storeCurrentUser(){
+        File file = new File("./currentUser.sav/");
+        UserInfo[] userInfos = new UserInfo[1];
+        try (ObjectInputStream is = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)))){
+            userInfos = (UserInfo[]) is.readObject();
+        }catch (IOException | ClassNotFoundException g){
+            g.printStackTrace();
+        }
+        userInfos[0] = currentUser;
+        System.out.println(userInfos[0].getUsername());
+        try(ObjectOutputStream os = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
+            os.writeObject(userInfos);
+        }catch (IOException g){
+            g.printStackTrace();
+        }
     }
 }

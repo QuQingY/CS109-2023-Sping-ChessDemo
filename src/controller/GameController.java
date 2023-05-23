@@ -137,7 +137,6 @@ public class GameController implements GameListener {
                     } else{
                         if(getCurrentPlayer()==PlayerColor.BLUE){
                             blue--;
-                            System.out.println("GUITIMING works well");
                             panel.getBluetime().setText(String.format("蓝方时间：%d",blue));
                             panel.getBluetime().repaint();
                         }else if(getCurrentPlayer()==PlayerColor.RED){
@@ -433,6 +432,7 @@ public class GameController implements GameListener {
                     panel.addRounds();
                 }
             }else{
+                model.Trap(step.getPoint(),step.getSelected_point());
                 model.moveChessPiece(steps.get(stepCounter-1).getPoint(), steps.get(stepCounter-1).getSelected_point());
                 view.setChessComponentAtGrid(steps.get(stepCounter-1).getSelected_point()
                         , view.removeChessComponentAtGrid(steps.get(stepCounter-1).getPoint()));
@@ -443,6 +443,13 @@ public class GameController implements GameListener {
                     roundCounter --;
                     panel.addRounds();
                 }
+            }
+            stepCounter--;
+            swapColor();
+            panel.switchPlayer();
+            if (currentPlayer == PlayerColor.BLUE){
+                roundCounter --;
+                panel.addRounds();
             }
         }
 

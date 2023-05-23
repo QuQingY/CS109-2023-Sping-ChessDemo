@@ -153,7 +153,7 @@ public class MyFrame extends JFrame {
                     }
                 }
 
-            }else{
+            }else if(Label.equals("login")){
                 char[] input = passwordField.getPassword();
                 File file = new File("./users.sav/");
                 UserInfo[] users = new UserInfo[100];

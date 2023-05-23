@@ -3,12 +3,9 @@ package controller;
 
 import listener.GameListener;
 import model.*;
+import view.*;
 import view.Animal.*;
-import view.CellComponent;
-import view.ChessComponent;
-import view.ChessboardComponent;
 
-import view.ChessGamePanel;
 import Stream.Audio;
 
 import view.ChessGamePanel;
@@ -37,6 +34,8 @@ public class GameController implements GameListener {
     private ChessGamePanel panel;
     private PlayerColor currentPlayer;
     private PlayerColor winner;
+
+    private UserInfo currentUser;
 
     private List<Step> steps;
 
@@ -105,6 +104,39 @@ public class GameController implements GameListener {
     private void denWin(){
         winner = currentPlayer;
         System.out.println("Winner is " + winner);
+
+        if (winner == PlayerColor.BLUE){
+            currentUser = panel.readCurrentUser();
+            System.out.println(currentUser.getUsername());
+            currentUser.setScore(panel.getCurrentUser().getScore() + 1);
+            File file = new File("./users.sav");
+            UserInfo[] users = new UserInfo[100];
+            try (ObjectInputStream is = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)))){
+                users = (UserInfo[]) is.readObject();
+            }catch (IOException | ClassNotFoundException g){
+                g.printStackTrace();
+            }
+            for (int i = 0; i < users.length; i++){
+                if (users[i] != null){
+                    System.out.println(users[i].getUsername());
+                }
+            }
+            for (int i = 0; i < users.length; i++){
+                if ( users[i] != null){
+                    if (users[i].getUsername().equals(currentUser.getUsername())){
+                    System.out.println(users[i].getUsername());
+                    users[i].setScore(currentUser.getScore());
+                    System.out.println(users[i].getScore());
+                    break;}
+                }
+            }
+            try(ObjectOutputStream os = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
+                os.writeObject(users);
+            }catch (IOException g){
+                g.printStackTrace();
+            }
+        }
+
         view.showWinningInterface(winner.toString());
     }
 
@@ -289,7 +321,7 @@ public class GameController implements GameListener {
                     model.getGrid()[i][j].removePiece();
                     view.removeChessComponentAtGrid(point);
                 }
-                if (pieceInfoFromTxt[2][i][j].getRank() > 0){
+                if (pieceInfoFromTxt[2][i][j].getName() != "N"){
                     if (pieceInfoFromTxt[2][i][j].getPlayer().equals("Blue")){
                         ChessPiece piece = new ChessPiece(PlayerColor.BLUE
                                 , pieceInfoFromTxt[2][i][j].getName()
@@ -303,24 +335,25 @@ public class GameController implements GameListener {
                                 ,pieceInfoFromTxt[2][i][j].getRank());
                         model.getGrid()[i][j].setPiece(piece);
                     }
-                    switch(model.getGrid()[i][j].getPiece().getRank()){
-                        case 8:  view.getGridComponents()[i][j].add(new ElephantChessComponent(
-                                model.getChessPieceOwner(point),view.getCHESS_SIZE()
-                        ));break;
-                        case 7 : view.getGridComponents()[i][j].add(new LionChessComponent(
+                    if (model.getGrid()[i][j].getPiece() != null){
+                    switch(model.getGrid()[i][j].getPiece().getName()){
+                        case "Elephant":  view.getGridComponents()[i][j].add(new ElephantChessComponent(
                                 model.getChessPieceOwner(point),view.getCHESS_SIZE()));break;
-                        case 6 : view.getGridComponents()[i][j].add(new TigerChessComponent(
+                        case "Lion" : view.getGridComponents()[i][j].add(new LionChessComponent(
                                 model.getChessPieceOwner(point),view.getCHESS_SIZE()));break;
-                        case 5 : view.getGridComponents()[i][j].add(new LeopardChessComponent(
+                        case "Tiger" : view.getGridComponents()[i][j].add(new TigerChessComponent(
                                 model.getChessPieceOwner(point),view.getCHESS_SIZE()));break;
-                        case 4 : view.getGridComponents()[i][j].add(new WolfChessComponent(
+                        case "Leopard" : view.getGridComponents()[i][j].add(new LeopardChessComponent(
                                 model.getChessPieceOwner(point),view.getCHESS_SIZE()));break;
-                        case 3 : view.getGridComponents()[i][j].add(new DogChessComponent(
+                        case "Wolf" : view.getGridComponents()[i][j].add(new WolfChessComponent(
                                 model.getChessPieceOwner(point),view.getCHESS_SIZE()));break;
-                        case 2 : view.getGridComponents()[i][j].add(new CatChessComponent(
+                        case "Dog" : view.getGridComponents()[i][j].add(new DogChessComponent(
                                 model.getChessPieceOwner(point),view.getCHESS_SIZE()));break;
-                        case 1 : view.getGridComponents()[i][j].add(new MouseChessComponent(
+                        case "Cat" : view.getGridComponents()[i][j].add(new CatChessComponent(
                                 model.getChessPieceOwner(point),view.getCHESS_SIZE()));break;
+                        case "Mouse" : view.getGridComponents()[i][j].add(new MouseChessComponent(
+                                model.getChessPieceOwner(point),view.getCHESS_SIZE()));break;
+                    }
                     }
                 }
             }

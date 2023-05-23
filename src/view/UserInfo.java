@@ -6,6 +6,10 @@ public class UserInfo implements Serializable {
     private  String username;
     private  char[] password = new char[20];
 
+    private int score = 0;
+
+    private static final long serialVersionUID = 3;
+
     public  void setUsername(String username1) {
         username = username1;
     }
@@ -37,6 +41,12 @@ public class UserInfo implements Serializable {
             }
             }
         return sign;
+    }
+
+    public int getScore(){ return  score;}
+
+    public void setScore(int score) {
+        this.score = score;
     }
 }
 

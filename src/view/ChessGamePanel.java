@@ -9,6 +9,10 @@ import model.PlayerColor;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * 这个类表示游戏过程中的整个游戏界面，是一切的载体
@@ -20,9 +24,13 @@ public class ChessGamePanel extends ImagePanel {
 
     private final int ONE_CHESS_SIZE;
 
+
+
     private JLabel player = this.addPlayerLabel();
 
     private JLabel round = this.addRoundCounterLabel();
+    private JLabel redtime = addRedTimeLable();
+    private JLabel bluetime = addBLueTimeLabel();
 
     public void switchPlayer(){
         if (chessboardComponent.getGameController().getCurrentPlayer() == PlayerColor.RED){
@@ -65,7 +73,11 @@ public class ChessGamePanel extends ImagePanel {
         addRoundCounterLabel();
         add(player);
         add(round);
+        add(redtime);
+        add(bluetime);
     }
+
+
 
     public ChessboardComponent getChessboardComponent() {
         return chessboardComponent;
@@ -92,6 +104,31 @@ public class ChessGamePanel extends ImagePanel {
     /**
      * 在游戏面板中添加标签
      */
+
+    public JLabel addRedTimeLable(){
+        JLabel redtime = new JLabel();
+        redtime.setLocation(HEIGHT, HEIGHT / 10 +220 );
+        redtime.setSize(200,50);
+        redtime.setFont(new Font("Rockwell", Font.BOLD, 20));
+        return redtime;
+    }
+
+    public JLabel addBLueTimeLabel(){
+        JLabel bluetime = new JLabel();
+        bluetime.setLocation(HEIGHT, HEIGHT / 10 + 580);
+        bluetime.setSize(200,50);
+        bluetime.setFont(new Font("Rockwell", Font.BOLD, 20));
+        return bluetime;
+    }
+
+    public JLabel getBluetime() {
+        return bluetime;
+    }
+
+    public JLabel getRedtime() {
+        return redtime;
+    }
+
     public  JLabel addPlayerLabel() {
         String currentPlayer = "Blue's turn";
         JLabel l = new JLabel(currentPlayer);

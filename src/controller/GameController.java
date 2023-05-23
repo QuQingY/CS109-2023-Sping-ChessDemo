@@ -15,9 +15,13 @@ import view.ChessGamePanel;
 
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimerTask;
 
 import static model.Constant.CHESSBOARD_COL_SIZE;
 import static model.Constant.CHESSBOARD_ROW_SIZE;
@@ -44,6 +48,10 @@ public class GameController implements GameListener {
 
     private int stepCounter = 1;
 
+    public static int red=30;
+    public static int blue=30;
+    public static long countTime;
+
     // Record whether there is a selected piece before
     private ChessboardPoint selectedPoint;
 
@@ -69,6 +77,7 @@ public class GameController implements GameListener {
         initialize();
         view.initiateChessComponent(model);
         view.repaint();
+        timing();
     }
 
     public Chessboard getModel() {
@@ -88,9 +97,66 @@ public class GameController implements GameListener {
     }
 
     // after a valid move swap the player
-    private void swapColor() {
+    public void swapColor() {
         currentPlayer = currentPlayer == PlayerColor.BLUE ? PlayerColor.RED : PlayerColor.BLUE;
     }
+
+    public void timing(){
+        countTime=0;
+        panel.getRedtime().setText(String.format("红方时间：%d",red));
+        panel.getBluetime().setText(String.format("蓝方时间：%d",blue));
+        java.util.Timer timer = new java.util.Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if(panel.isVisible()){
+                    countTime++;
+                    if( (getCurrentPlayer()==PlayerColor.RED&&blue!=30) ||
+                            (getCurrentPlayer()==PlayerColor.BLUE&&red!=30)){
+                        blue=30;
+                        red=30;
+                        panel.getRedtime().setText(String.format("红方时间：%d",red));
+                        panel.getRedtime().repaint();
+                        panel.getBluetime().setText(String.format("蓝方时间：%d",blue));
+                        panel.getBluetime().repaint();
+                        countTime=0;
+                    } else if (countTime>30) {
+                        blue=30;
+                        red=30;
+                        panel.getRedtime().setText(String.format("红方时间：%d",red));
+                        panel.getRedtime().repaint();
+                        panel.getBluetime().setText(String.format("蓝方时间：%d",blue));
+                        panel.getBluetime().repaint();
+                        swapColor();
+                        panel.switchPlayer();
+                        if (currentPlayer == PlayerColor.BLUE){
+                            roundCounter ++;
+                        }
+                        panel.addRounds();
+                        countTime=0;
+                    } else{
+                        if(getCurrentPlayer()==PlayerColor.BLUE){
+                            blue--;
+                            System.out.println("GUITIMING works well");
+                            panel.getBluetime().setText(String.format("蓝方时间：%d",blue));
+                            panel.getBluetime().repaint();
+                        }else if(getCurrentPlayer()==PlayerColor.RED){
+                            red--;
+                            panel.getRedtime().setText(String.format("红方时间：%d",red));
+                            panel.getRedtime().repaint();
+                        }
+                    }
+
+
+                }
+
+
+
+            }
+        },0,1000);
+    }
+
+
 
 
 

@@ -9,6 +9,7 @@ import model.PlayerColor;
 
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -34,6 +35,7 @@ public class ChessGamePanel extends ImagePanel {
     private JLabel round = this.addRoundCounterLabel();
     private JLabel redtime = addRedTimeLable();
     private JLabel bluetime = addBLueTimeLabel();
+    private ChessboardComponent chessboardComponent;
 
 
     public void switchPlayer(){
@@ -51,7 +53,7 @@ public class ChessGamePanel extends ImagePanel {
 
 
 
-    private ChessboardComponent chessboardComponent;
+
 
     public ChessGamePanel(int width, int height) {
 //        setTitle("2023 CS109 Project Demo"); //设置标题
@@ -204,7 +206,6 @@ public class ChessGamePanel extends ImagePanel {
         add(button);
 
         button.addActionListener(e -> {
-            System.out.println("Click load");
             String path = JOptionPane.showInputDialog(this,"Input Path here");
             chessboardComponent.getGameController().load(path);
         });

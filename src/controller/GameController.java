@@ -162,6 +162,39 @@ public class GameController implements GameListener {
         if (model.win(currentPlayer)){
             winner = currentPlayer;
             System.out.println("Winner is " + winner);
+
+            if (winner == PlayerColor.BLUE){
+                currentUser = panel.readCurrentUser();
+                System.out.println(currentUser.getUsername());
+                currentUser.setScore(panel.getCurrentUser().getScore() + 1);
+                File file = new File("./users.sav");
+                UserInfo[] users = new UserInfo[100];
+                try (ObjectInputStream is = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)))){
+                    users = (UserInfo[]) is.readObject();
+                }catch (IOException | ClassNotFoundException g){
+                    g.printStackTrace();
+                }
+                for (int i = 0; i < users.length; i++){
+                    if (users[i] != null){
+                        System.out.println(users[i].getUsername());
+                    }
+                }
+                for (int i = 0; i < users.length; i++){
+                    if ( users[i] != null){
+                        if (users[i].getUsername().equals(currentUser.getUsername())){
+                            System.out.println(users[i].getUsername());
+                            users[i].setScore(currentUser.getScore());
+                            System.out.println(users[i].getScore());
+                            break;}
+                    }
+                }
+                try(ObjectOutputStream os = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
+                    os.writeObject(users);
+                }catch (IOException g){
+                    g.printStackTrace();
+                }
+            }
+
             view.showWinningInterface(winner.toString());
         }
     }
@@ -358,6 +391,8 @@ public class GameController implements GameListener {
                 e.printStackTrace();
             }
         }
+
+        JOptionPane.showMessageDialog(panel, "Game saved");
    }
 
    public void load(String path){
@@ -426,6 +461,7 @@ public class GameController implements GameListener {
         view.repaint();
        panel.switchPlayer();
        panel.addRounds();
+       JOptionPane.showMessageDialog(panel,"Game loaded!");
    }
 
    public void recordStep(ChessboardPoint selectedPoint, ChessboardPoint point){

@@ -260,8 +260,8 @@ public class MyFrame extends JFrame {
         System.out.println(userInfos[0].getUsername());
         try(ObjectOutputStream os = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
             os.writeObject(userInfos);
-        }catch (IOException g){
-            g.printStackTrace();
+        }catch (IOException e){
+            e.printStackTrace();
         }
     }
 }

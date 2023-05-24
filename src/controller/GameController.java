@@ -477,13 +477,6 @@ public class GameController implements GameListener {
                     panel.addRounds();
                 }
             }
-            stepCounter--;
-            swapColor();
-            panel.switchPlayer();
-            if (currentPlayer == PlayerColor.BLUE){
-                roundCounter --;
-                panel.addRounds();
-            }
         }
 
    }

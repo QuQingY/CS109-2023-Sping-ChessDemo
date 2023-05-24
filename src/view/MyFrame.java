@@ -27,8 +27,6 @@ public class MyFrame extends JFrame {
         drawLoginPanel();
         drawRegisterPanel();
 
-
-//        ChessGamePanel mainPanel = new ChessGamePanel(1100, 810);
     }
 
     public void drawFirstPanel(){
@@ -158,7 +156,7 @@ public class MyFrame extends JFrame {
                     }
                 }
 
-            }else{
+            }else if(Label.equals("login")){
                 char[] input = passwordField.getPassword();
                 File file = new File("./users.sav/");
                 UserInfo[] users = new UserInfo[100];

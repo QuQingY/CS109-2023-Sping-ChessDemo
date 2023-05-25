@@ -255,12 +255,13 @@ public class ChessGamePanel extends ImagePanel {
         });
     }
 
+
     public UserInfo getCurrentUser(){
         return currentUser;
     }
 
     public UserInfo readCurrentUser(){
-        File file = new File("./users.sav/");
+        File file = new File("./currentUser.sav/");
         UserInfo[] userInfo = new UserInfo[1];
         try (ObjectInputStream is = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)))){
             userInfo = (UserInfo[]) is.readObject();

@@ -251,17 +251,28 @@ public class MyFrame extends JFrame {
     public void storeCurrentUser(){
         File file = new File("./currentUser.sav/");
         UserInfo[] userInfos = new UserInfo[1];
-        try (ObjectInputStream is = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)))){
-            userInfos = (UserInfo[]) is.readObject();
-        }catch (IOException | ClassNotFoundException g){
-            g.printStackTrace();
+        if(file.exists()){
+            try (ObjectInputStream is = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)))){
+                userInfos = (UserInfo[]) is.readObject();
+            }catch (IOException | ClassNotFoundException g){
+                g.printStackTrace();
+            }
+            userInfos[0] = currentUser;
+            System.out.println(userInfos[0].getUsername());
+            try(ObjectOutputStream os = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
+                os.writeObject(userInfos);
+            }catch (IOException e){
+                e.printStackTrace();
+            }
         }
-        userInfos[0] = currentUser;
-        System.out.println(userInfos[0].getUsername());
-        try(ObjectOutputStream os = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
-            os.writeObject(userInfos);
-        }catch (IOException e){
-            e.printStackTrace();
+        else {
+            userInfos[0] = currentUser;
+            System.out.println(userInfos[0].getUsername());
+            try(ObjectOutputStream os = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
+                os.writeObject(userInfos);
+            }catch (IOException e){
+                e.printStackTrace();
+            }
         }
     }
 }

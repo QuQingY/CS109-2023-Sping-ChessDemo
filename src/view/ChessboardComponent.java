@@ -236,13 +236,14 @@ public class ChessboardComponent extends JComponent {
     }
 
     public void showWinningInterface(String winner) {
-        int result = JOptionPane.showConfirmDialog(this, "Do you want to restart the game?", winner + " win! Game Over", JOptionPane.YES_NO_OPTION);
+        /*int result = JOptionPane.showConfirmDialog(this, "Do you want to restart the game?", winner + " win! Game Over", JOptionPane.YES_NO_OPTION);
         if (result == JOptionPane.YES_OPTION) {
             gameController.restart();
         }
         if (result == JOptionPane.NO_OPTION) {
             System.exit(0);
-        }
+        }*/
+        JOptionPane.showMessageDialog(this ,"Game Over! "+ winner +" Win!");
     }
 
     public GameController getGameController() {

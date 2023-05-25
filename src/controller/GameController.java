@@ -18,6 +18,7 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.TimerTask;
 
 import static model.Constant.CHESSBOARD_COL_SIZE;
@@ -53,6 +54,8 @@ public class GameController implements GameListener {
 
     // Record whether there is a selected piece before
     private ChessboardPoint selectedPoint;
+
+    private boolean inAIMode;
 
     public int getRoundCounter(){
         return this.roundCounter;
@@ -333,8 +336,8 @@ public class GameController implements GameListener {
         winner = null;
 
         view.repaint();
-        currentPlayer = PlayerColor.BLUE;
         roundCounter = 1;
+        currentPlayer = PlayerColor.BLUE;
         panel.switchPlayer();
         panel.addRounds();
 
@@ -516,5 +519,7 @@ public class GameController implements GameListener {
         }
 
    }
+
+
 
 }

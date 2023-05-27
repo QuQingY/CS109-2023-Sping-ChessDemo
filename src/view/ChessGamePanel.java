@@ -77,6 +77,7 @@ public class ChessGamePanel extends ImagePanel {
         addUndoButton();
         addPlayerLabel();
         addRoundCounterLabel();
+        addAIButton();
         add(player);
         add(round);
         add(redtime);
@@ -252,6 +253,22 @@ public class ChessGamePanel extends ImagePanel {
 
         undoButton.addActionListener(e -> {
             chessboardComponent.getGameController().undo();
+        });
+    }
+
+    public void addAIButton(){
+        JButton AIButton = new JButton("AI");
+        AIButton.setLocation(HEIGHT+250, HEIGHT / 10 +240 );
+        AIButton.setSize(100,30);
+        AIButton.setFont(new Font("Rockwell", Font.BOLD, 10));
+        add(AIButton);
+
+        AIButton.addActionListener(e -> {
+            if (!chessboardComponent.getGameController().getInAIMode()){
+                chessboardComponent.getGameController().setInAIMode(true);
+            }else {
+                chessboardComponent.getGameController().setInAIMode(false);
+            }
         });
     }
 

@@ -54,6 +54,7 @@ public class GameController implements GameListener {
 
     // Record whether there is a selected piece before
     private ChessboardPoint selectedPoint;
+    private AI ai;
 
     private boolean inAIMode;
 
@@ -267,7 +268,24 @@ public class GameController implements GameListener {
             panel.switchPlayer();
             panel.addRounds();
             // TODO: if the chess enter Dens or Traps and so on
-
+            if (inAIMode){
+                ai.selectSrc(model);
+                ai.selectDest(model);
+                model.Trap(ai.getSrc(),ai.getDest());
+                model.moveChessPiece(ai.getSrc(),ai.getDest());
+                view.setChessComponentAtGrid(ai.getDest(),view.removeChessComponentAtGrid(ai.getSrc()));
+                recordStep(ai.getSrc(),ai.getDest());
+                ai.clearSelection();
+                view.repaint();
+                if (model.enterDen(ai.getDest())){
+                    denWin();
+                }
+                swapColor();
+                stepCounter++;
+                Audio.playVoice("D:\\JavaProject\\place.wav");
+                panel.switchPlayer();
+                panel.addRounds();
+            }
 
 
         }
@@ -308,11 +326,31 @@ public class GameController implements GameListener {
             if (currentPlayer == PlayerColor.BLUE){
                 roundCounter ++;
             }
+            panel.switchPlayer();
+            panel.addRounds();
+
+            if (inAIMode){
+                ai.selectSrc(model);
+                ai.selectDest(model);
+                model.Trap(ai.getSrc(),ai.getDest());
+                model.moveChessPiece(ai.getSrc(),ai.getDest());
+                view.setChessComponentAtGrid(ai.getDest(),view.removeChessComponentAtGrid(ai.getSrc()));
+                recordStep(ai.getSrc(),ai.getDest());
+                ai.clearSelection();
+                view.repaint();
+                if (model.enterDen(ai.getDest())){
+                    denWin();
+                }
+                swapColor();
+                stepCounter++;
+                Audio.playVoice("D:\\JavaProject\\place.wav");
+                panel.switchPlayer();
+                panel.addRounds();
+            }
         }
 
 
-        panel.switchPlayer();
-        panel.addRounds();
+
 
   }
 
@@ -520,6 +558,10 @@ public class GameController implements GameListener {
 
    }
 
-
-
+    public void setInAIMode(boolean inAIMode) {
+        this.inAIMode = inAIMode;
+    }
+    public boolean getInAIMode(){
+        return this.inAIMode;
+    }
 }

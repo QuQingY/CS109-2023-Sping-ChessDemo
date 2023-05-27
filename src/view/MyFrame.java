@@ -167,7 +167,7 @@ public class MyFrame extends JFrame {
                 }
                 for (int i = 0; i < users.length; i++){
                     if (textField.getText().equals(users[i].getUsername())){
-                        if (userInfo.isPasswordCorrect(input)){
+                        if (users[i].isPasswordCorrect(input)){
                             currentUser = users[i];
                             System.out.println(currentUser.getUsername());
                             cardLayout.show(this.getContentPane(),"main");

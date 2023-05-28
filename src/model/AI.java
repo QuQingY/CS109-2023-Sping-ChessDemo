@@ -6,6 +6,12 @@ public class AI {
     private ChessboardPoint src;
     private ChessboardPoint dest;
 
+    private Chessboard model;
+
+    public AI (Chessboard model){
+        this.model = model;
+    }
+
     public void selectSrc(Chessboard model){
 
         while(src == null){
@@ -13,7 +19,8 @@ public class AI {
             int rank = random.nextInt(8);
             for (int i = 0; i < 9; i++){
                 for(int j = 0; j < 7; j++){
-                    if (model.getGrid()[i][j].getPiece().getRank() == rank
+                    if (model.getGrid()[i][j].getPiece()!= null
+                            &&model.getGrid()[i][j].getPiece().getRank() == rank
                     &&model.getGrid()[i][j].getPiece().getOwner() == PlayerColor.RED){
                         ChessboardPoint chessboardPoint =new ChessboardPoint(i,j);
                         src = chessboardPoint;

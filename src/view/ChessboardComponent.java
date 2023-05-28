@@ -1,7 +1,7 @@
 package view;
 
 
-import controller.GameController;
+import controller.*;
 import model.*;
 import view.Animal.*;
 

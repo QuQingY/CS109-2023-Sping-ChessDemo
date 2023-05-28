@@ -34,14 +34,18 @@ public class AI {
 
         int[] dirX = {1,0,-1,0};
         int[] dirY = {0,1,0,-1};
-        while (dest == null){
+        while (dest == null) {
             Random random = new Random();
             int dir = random.nextInt(4);
+            if ((src.getRow() + dirX[dir] >= 0 && src.getRow() + dirX[dir] < 9)
+                    && (src.getCol() + dirY[dir] >= 0 && src.getCol() + dirY[dir] < 7)) {
+                ChessboardPoint temp = new ChessboardPoint(src.getRow() + dirX[dir], src.getCol() + dirY[dir]);
 
-            ChessboardPoint temp = new ChessboardPoint(src.getRow()+dirX[dir],src.getCol()+dirY[dir]);
+                if (model.isValidMove(src, temp) || model.isValidCapture(src, temp)) {
+                    dest = temp;
+                }
 
-            if (model.isValidMove(src, temp)|| model.isValidCapture(src,temp)) {
-                dest = temp;
+
             }
         }
 

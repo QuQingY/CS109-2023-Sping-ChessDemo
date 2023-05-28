@@ -101,6 +101,7 @@ public class GameController implements GameListener {
 
     // after a valid move swap the player
     public void swapColor() {
+        System.out.println("AI gogo");
         currentPlayer = currentPlayer == PlayerColor.BLUE ? PlayerColor.RED : PlayerColor.BLUE;
     }
 
@@ -246,112 +247,108 @@ public class GameController implements GameListener {
     // click an empty cell
     @Override
     public void onPlayerClickCell(ChessboardPoint point, CellComponent component) {
-        if (selectedPoint != null && model.isValidMove(selectedPoint, point)) {
-            //进入或离开陷阱
-            model.Trap(selectedPoint,point);
-            //移动
-            model.moveChessPiece(selectedPoint, point);
-            view.setChessComponentAtGrid(point, view.removeChessComponentAtGrid(selectedPoint));
-            recordStep(selectedPoint,point);
-            selectedPoint = null;
-            view.repaint();
-            if (model.enterDen(point)){
-                denWin();
-            }
-
-            swapColor();
-            if (currentPlayer == PlayerColor.BLUE){
-                roundCounter ++;
-            }
-            stepCounter ++;
-            Audio.playVoice("D:\\JavaProject\\place.wav");
-            panel.switchPlayer();
-            panel.addRounds();
-            // TODO: if the chess enter Dens or Traps and so on
-            if (inAIMode){
-                ai.selectSrc(model);
-                ai.selectDest(model);
-                model.Trap(ai.getSrc(),ai.getDest());
-                model.moveChessPiece(ai.getSrc(),ai.getDest());
-                view.setChessComponentAtGrid(ai.getDest(),view.removeChessComponentAtGrid(ai.getSrc()));
-                recordStep(ai.getSrc(),ai.getDest());
-                ai.clearSelection();
+        if(currentPlayer==PlayerColor.BLUE||!inAIMode) {
+            if (selectedPoint != null && model.isValidMove(selectedPoint, point)) {
+                //进入或离开陷阱
+                model.Trap(selectedPoint, point);
+                //移动
+                model.moveChessPiece(selectedPoint, point);
+                view.setChessComponentAtGrid(point, view.removeChessComponentAtGrid(selectedPoint));
+                recordStep(selectedPoint, point);
+                selectedPoint = null;
                 view.repaint();
-                if (model.enterDen(ai.getDest())){
+                if (model.enterDen(point)) {
                     denWin();
                 }
+
                 swapColor();
+                if (currentPlayer == PlayerColor.BLUE) {
+                    roundCounter++;
+                }
                 stepCounter++;
                 Audio.playVoice("D:\\JavaProject\\place.wav");
                 panel.switchPlayer();
                 panel.addRounds();
+                // TODO: if the chess enter Dens or Traps and so on
+
+
+
             }
-
-
         }
     }
 
     // click a cell with a chess
     @Override
     public void onPlayerClickChessPiece(ChessboardPoint point, ChessComponent component) {
-        if (selectedPoint == null) {
-            if (model.getChessPieceOwner(point).equals(currentPlayer)) {
-                selectedPoint = point;
-                component.setSelected(true);
-                component.repaint();
-                view.showMove(point,component,view);
+        if(currentPlayer==PlayerColor.BLUE||!inAIMode) {
+            if (selectedPoint == null) {
+                if (model.getChessPieceOwner(point).equals(currentPlayer)) {
+                    selectedPoint = point;
+                    component.setSelected(true);
+                    component.repaint();
+                    view.showMove(point, component, view);
 
-            }
-        } else if (selectedPoint.equals(point)) {
-            selectedPoint = null;
-            component.setSelected(false);
-            component.repaint();
-            view.showMove(point,component,view);
-        }
-        // TODO: Implement capture function
-        else {
-            if(model.isValidCapture(selectedPoint,point)){
-                recordCaptureStep(selectedPoint,point,(ChessComponent) view.getGridComponentAt(point).getComponents()[0],model.getChessPieceAt(point));
-                stepCounter++;
-            }
-
-            model.captureChessPiece(selectedPoint, point);
-            view.removeChessComponentAtGrid(point);
-            view.setChessComponentAtGrid(point, view.removeChessComponentAtGrid(selectedPoint));
-            selectedPoint = null;
-            view.repaint();
-            solveWin();
-
-            swapColor();
-            if (currentPlayer == PlayerColor.BLUE){
-                roundCounter ++;
-            }
-            panel.switchPlayer();
-            panel.addRounds();
-
-            if (inAIMode){
-                ai.selectSrc(model);
-                ai.selectDest(model);
-                model.Trap(ai.getSrc(),ai.getDest());
-                model.moveChessPiece(ai.getSrc(),ai.getDest());
-                view.setChessComponentAtGrid(ai.getDest(),view.removeChessComponentAtGrid(ai.getSrc()));
-                recordStep(ai.getSrc(),ai.getDest());
-                ai.clearSelection();
-                view.repaint();
-                if (model.enterDen(ai.getDest())){
-                    denWin();
                 }
+            } else if (selectedPoint.equals(point)) {
+                selectedPoint = null;
+                component.setSelected(false);
+                component.repaint();
+                view.showMove(point, component, view);
+            }
+            // TODO: Implement capture function
+            else {
+                if (model.isValidCapture(selectedPoint, point)) {
+                    recordCaptureStep(selectedPoint, point, (ChessComponent) view.getGridComponentAt(point).getComponents()[0], model.getChessPieceAt(point));
+                    stepCounter++;
+                }
+
+                model.captureChessPiece(selectedPoint, point);
+                view.removeChessComponentAtGrid(point);
+                view.setChessComponentAtGrid(point, view.removeChessComponentAtGrid(selectedPoint));
+                selectedPoint = null;
+                view.repaint();
+                solveWin();
+
                 swapColor();
-                stepCounter++;
-                Audio.playVoice("D:\\JavaProject\\place.wav");
+                if (currentPlayer == PlayerColor.BLUE) {
+                    roundCounter++;
+                }
                 panel.switchPlayer();
                 panel.addRounds();
+
+
             }
         }
+  }
 
-
-
-
+  public void AIplay(){
+        if (inAIMode&&currentPlayer==PlayerColor.RED) {
+          ai.selectSrc(model);
+          ai.selectDest(model);
+          model.Trap(ai.getSrc(), ai.getDest());
+          if(getModel().isValidCapture(ai.getSrc(), ai.getDest())){
+              model.captureChessPiece(ai.getSrc(), ai.getDest());
+              view.removeChessComponentAtGrid(ai.getDest());
+          }else if(getModel().isValidMove(ai.getSrc(), ai.getDest())){
+              model.moveChessPiece(ai.getSrc(), ai.getDest());
+          }
+          view.setChessComponentAtGrid(ai.getDest(), view.removeChessComponentAtGrid(ai.getSrc()));
+          recordStep(ai.getSrc(), ai.getDest());
+          view.repaint();
+            System.out.println("prepare for swapcolor");
+          if (model.enterDen(ai.getDest())) {
+              denWin();
+          }
+          swapColor();
+            if (currentPlayer == PlayerColor.BLUE) {
+                roundCounter++;
+            }
+          stepCounter++;
+          Audio.playVoice("D:\\JavaProject\\place.wav");
+          panel.switchPlayer();
+          panel.addRounds();
+          ai.clearSelection();
+      }
   }
 
     public void restart(){

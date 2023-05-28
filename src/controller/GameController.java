@@ -54,7 +54,7 @@ public class GameController implements GameListener {
 
     // Record whether there is a selected piece before
     private ChessboardPoint selectedPoint;
-    private AI ai;
+    private AI ai = new AI(this.model);
 
     private boolean inAIMode;
 
